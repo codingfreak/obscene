@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/.solution/">
     <File Path=".gitignore" />
+    <File Path="global.json" />
     <File Path="README.md" />
     <File Path="src/Base.props" />
   </Folder>
