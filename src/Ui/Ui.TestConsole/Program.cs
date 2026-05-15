@@ -1,14 +1,10 @@
-﻿namespace codingfreaks.obscene.Ui.TestConsole
+﻿using System.Runtime.Versioning;
+
+using codingfreaks.obscene.Ui.TestConsole;
+
+[assembly: SupportedOSPlatform("windows")]
+
+Concept.Demo(() =>
 {
-    internal class Program
-    {
-        #region methods
-
-        private static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-        }
-
-        #endregion
-    }
-}
+    Console.ReadKey();
+});

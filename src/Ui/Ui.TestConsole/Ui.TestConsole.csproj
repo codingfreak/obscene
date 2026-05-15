@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props"/>
+    <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props" />
     <PropertyGroup>
+        <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
         <OutputType>Exe</OutputType>
     </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="System.Drawing.Common" Version="10.0.8" />
+    </ItemGroup>
 </Project>
