@@ -1,0 +1,10 @@
+<Project>
+    <PropertyGroup>
+        <RootNamespace>codingfreaks.obscene.$(MSBuildProjectName)</RootNamespace>
+        <AssemblyName>obscene.$(MSBuildProjectName)</AssemblyName>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+</Project>

@@ -2,5 +2,9 @@
   <Folder Name="/.solution/">
     <File Path=".gitignore" />
     <File Path="README.md" />
+    <File Path="src/Base.props" />
+  </Folder>
+  <Folder Name="/Ui/">
+    <Project Path="src/Ui/Ui.TestConsole/Ui.TestConsole.csproj" Id="c873ef68-63fd-425f-855d-1ddf29932f35" />
   </Folder>
 </Solution>
