@@ -4,6 +4,7 @@ namespace codingfreaks.obscene.Ui.TestConsole
 {
     using System.Drawing;
 
+    using Logic.Core.Geometries;
     using Logic.WinApi;
 
     /// <summary>
@@ -15,15 +16,12 @@ namespace codingfreaks.obscene.Ui.TestConsole
 
         public static void Demo(Action drawCallback, Point position, Size size)
         {
-            var windowContext = DrawingHelper.InitializeWindow(position, size);
-            var info = DrawingHelper.DrawCircle(windowContext.Handle, position, size.Width, Color.Red, 50, Color.DarkRed);
-            try
+            using (var circle = new Circle())
             {
+                circle.Position = position;
+                circle.Size = size;
+                circle.Draw();
                 drawCallback.Invoke();
-            }
-            finally
-            {
-                DrawingHelper.CleanupWindow(info);
             }
         }
 

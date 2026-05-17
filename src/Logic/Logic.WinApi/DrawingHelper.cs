@@ -1,5 +1,5 @@
 ﻿// ReSharper disable InconsistentNaming
-
+// ReSharper disable ConvertToUsingDeclaration
 namespace codingfreaks.obscene.Logic.WinApi
 {
     using System.Drawing;
@@ -54,59 +54,65 @@ namespace codingfreaks.obscene.Logic.WinApi
             int transparency = 100,
             Color? strokeColor = null)
         {
-            using var bmp = new Bitmap(position.X, position.Y, PixelFormat.Format32bppArgb);
-            using (var g = Graphics.FromImage(bmp))
+            using (var bmp = new Bitmap(position.X, position.Y, PixelFormat.Format32bppArgb))
             {
-                g.Clear(Color.Transparent);
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                using var brush = new SolidBrush(Color.FromArgb(transparency, fillColor));
-                g.FillEllipse(brush, 0, 0, radius - 1, radius - 1);
-                if (strokeColor != null)
+                using (var g = Graphics.FromImage(bmp))
                 {
-                    using var pen = new Pen(Color.FromArgb(transparency / 2, strokeColor.Value), 2f);
-                    g.DrawEllipse(pen, 1, 1, radius - 3, radius - 3);
+                    g.Clear(Color.Transparent);
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    using (var brush = new SolidBrush(Color.FromArgb(transparency, fillColor)))
+                    {
+                        g.FillEllipse(brush, 0, 0, radius - 1, radius - 1);
+                        if (strokeColor != null)
+                        {
+                            using (var pen = new Pen(Color.FromArgb(transparency / 2, strokeColor.Value), 2f))
+                            {
+                                g.DrawEllipse(pen, 1, 1, radius - 3, radius - 3);
+                            }
+                        }
+                    }
                 }
+                var screenDc = WinApiHelper.GetDC(IntPtr.Zero);
+                var memDc = WinApiHelper.CreateCompatibleDC(screenDc);
+                var hBitmap = IntPtr.Zero;
+                var oldBitmap = IntPtr.Zero;
+                hBitmap = bmp.GetHbitmap(Color.FromArgb(0));
+                oldBitmap = WinApiHelper.SelectObject(memDc, hBitmap);
+                var size = new SIZE
+                {
+                    cx = radius,
+                    cy = radius
+                };
+                var ptSrc = new POINT
+                {
+                    x = 0,
+                    y = 0
+                };
+                var ptDst = new POINT
+                {
+                    x = position.X,
+                    y = position.Y
+                };
+                var blend = new BLENDFUNCTION
+                {
+                    BlendOp = WinApiConstants.AC_SRC_OVER,
+                    BlendFlags = 0,
+                    SourceConstantAlpha = 255, // per-pixel alpha drives transparency
+                    AlphaFormat = WinApiConstants.AC_SRC_ALPHA
+                };
+                WinApiHelper.UpdateLayeredWindow(
+                    handle,
+                    screenDc,
+                    ref ptDst,
+                    ref size,
+                    memDc,
+                    ref ptSrc,
+                    0,
+                    ref blend,
+                    WinApiConstants.ULW_ALPHA);
+                ShowWindow(handle);
+                return new GeometryInformation(handle, screenDc, memDc, hBitmap, oldBitmap);
             }
-            var screenDc = WinApiHelper.GetDC(IntPtr.Zero);
-            var memDc = WinApiHelper.CreateCompatibleDC(screenDc);
-            var hBitmap = IntPtr.Zero;
-            var oldBitmap = IntPtr.Zero;
-            hBitmap = bmp.GetHbitmap(Color.FromArgb(0));
-            oldBitmap = WinApiHelper.SelectObject(memDc, hBitmap);
-            var size = new SIZE
-            {
-                cx = radius,
-                cy = radius
-            };
-            var ptSrc = new POINT
-            {
-                x = 0,
-                y = 0
-            };
-            var ptDst = new POINT
-            {
-                x = position.X,
-                y = position.Y
-            };
-            var blend = new BLENDFUNCTION
-            {
-                BlendOp = WinApiConstants.AC_SRC_OVER,
-                BlendFlags = 0,
-                SourceConstantAlpha = 255, // per-pixel alpha drives transparency
-                AlphaFormat = WinApiConstants.AC_SRC_ALPHA
-            };
-            WinApiHelper.UpdateLayeredWindow(
-                handle,
-                screenDc,
-                ref ptDst,
-                ref size,
-                memDc,
-                ref ptSrc,
-                0,
-                ref blend,
-                WinApiConstants.ULW_ALPHA);
-            ShowWindow(handle);
-            return new GeometryInformation(handle, screenDc, memDc, hBitmap, oldBitmap);
         }
 
         /// <summary>
