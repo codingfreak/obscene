@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props" />
     <PropertyGroup>
         <SupportedOSPlatformVersion>6.0</SupportedOSPlatformVersion>
@@ -6,6 +6,6 @@
         <OutputType>Exe</OutputType>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="10.0.8" />
+      <PackageReference Include="System.Drawing.Common" />
     </ItemGroup>
 </Project>
