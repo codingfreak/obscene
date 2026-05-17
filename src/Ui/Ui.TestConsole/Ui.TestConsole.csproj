@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props" />
     <PropertyGroup>
-        <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+        <SupportedOSPlatformVersion>6.0</SupportedOSPlatformVersion>
+        <TargetPlatformIdentifier>windows</TargetPlatformIdentifier>
         <OutputType>Exe</OutputType>
     </PropertyGroup>
     <ItemGroup>
