@@ -1,5 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToUsingDeclaration
+
 namespace codingfreaks.obscene.Logic.WinApi
 {
     using System.Drawing;
@@ -51,8 +52,8 @@ namespace codingfreaks.obscene.Logic.WinApi
             Point position,
             int radius,
             Color fillColor,
-            int transparency = 100,
-            Color? strokeColor = null)
+            Color? strokeColor = null,
+            float? strokeWidth = 2)
         {
             using (var bmp = new Bitmap(position.X, position.Y, PixelFormat.Format32bppArgb))
             {
@@ -60,14 +61,19 @@ namespace codingfreaks.obscene.Logic.WinApi
                 {
                     g.Clear(Color.Transparent);
                     g.SmoothingMode = SmoothingMode.AntiAlias;
-                    using (var brush = new SolidBrush(Color.FromArgb(transparency, fillColor)))
+                    using (var brush = new SolidBrush(fillColor))
                     {
                         g.FillEllipse(brush, 0, 0, radius - 1, radius - 1);
-                        if (strokeColor != null)
+                        if (strokeColor != null && strokeWidth != null)
                         {
-                            using (var pen = new Pen(Color.FromArgb(transparency / 2, strokeColor.Value), 2f))
+                            using (var pen = new Pen(strokeColor.Value, strokeWidth.Value))
                             {
-                                g.DrawEllipse(pen, 1, 1, radius - 3, radius - 3);
+                                g.DrawEllipse(
+                                    pen,
+                                    1,
+                                    1,
+                                    radius - (strokeWidth.Value + 1),
+                                    radius - (strokeWidth.Value + 1));
                             }
                         }
                     }

@@ -33,6 +33,21 @@
         /// </summary>
         Size Size { get; set; }
 
+        /// <summary>
+        /// The fill color to use.
+        /// </summary>
+        Color FillColor { get; set; }
+
+        /// <summary>
+        /// The optional border color to use.
+        /// </summary>
+        Color? BorderColor { get; set; }
+
+        /// <summary>
+        /// The optional width of the border.
+        /// </summary>
+        int? BorderWidth { get; set; }
+
         #endregion
     }
 }

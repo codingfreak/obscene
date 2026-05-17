@@ -30,6 +30,12 @@
         }
 
         /// <inheritdoc />
+        public Color? BorderColor { get; set; }
+
+        /// <inheritdoc />
+        public int? BorderWidth { get; set; }
+
+        /// <inheritdoc />
         public void Draw()
         {
             _windowContext = DrawingHelper.InitializeWindow(Position, Size);
@@ -37,12 +43,15 @@
         }
 
         /// <inheritdoc />
+        public Color FillColor { get; set; } = Color.FromArgb(50, Color.Red);
+
+        /// <inheritdoc />
         public Point Position
         {
             get;
             set
             {
-                if (!BeforePositionChange(value))
+                if (!BeforePositionChange(ref value))
                 {
                     return;
                 }
@@ -62,7 +71,7 @@
             get;
             set
             {
-                if (!BeforeSizeChange(value))
+                if (!BeforeSizeChange(ref value))
                 {
                     return;
                 }
@@ -80,7 +89,7 @@
         /// </summary>
         /// <param name="value">The new value that should be applied.</param>
         /// <returns><c>true</c> if the value should be accepted, otherwise <c>false</c>.</returns>
-        protected virtual bool BeforePositionChange(Point value)
+        protected virtual bool BeforePositionChange(ref Point value)
         {
             return true;
         }
@@ -90,7 +99,7 @@
         /// </summary>
         /// <param name="value">The new value that should be applied.</param>
         /// <returns><c>true</c> if the value should be accepted, otherwise <c>false</c>.</returns>
-        protected virtual bool BeforeSizeChange(Size value)
+        protected virtual bool BeforeSizeChange(ref Size value)
         {
             return true;
         }

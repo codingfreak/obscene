@@ -7,6 +7,9 @@
     using WinApi;
     using WinApi.Models;
 
+    /// <summary>
+    /// Provides logic to draw a top-most cirle on the screen.
+    /// </summary>
     public class Circle : BaseGeometry
     {
         #region methods
@@ -18,7 +21,14 @@
             {
                 throw new InvalidOperationException("No handle was present.");
             }
-            return DrawingHelper.DrawCircle(Handle.Value, Position, Size.Width, Color.Red, 50, Color.DarkRed);
+            return DrawingHelper.DrawCircle(Handle.Value, Position, Size.Width, FillColor, BorderColor);
+        }
+
+        /// <inheritdoc />
+        protected override bool BeforeSizeChange(ref Size value)
+        {
+            value.Height = value.Width;
+            return base.BeforeSizeChange(ref value);
         }
 
         #endregion
