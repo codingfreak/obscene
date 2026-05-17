@@ -3,12 +3,8 @@
     <PropertyGroup>
         <SupportedOSPlatformVersion>6.0</SupportedOSPlatformVersion>
         <TargetPlatformIdentifier>windows</TargetPlatformIdentifier>
-        <OutputType>Exe</OutputType>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\..\Logic\Logic.WinApi\Logic.WinApi.csproj" />
+        <PackageReference Include="System.Drawing.Common" />
     </ItemGroup>
 </Project>
