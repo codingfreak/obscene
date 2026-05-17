@@ -5,6 +5,9 @@
     <File Path="README.md" />
     <File Path="src/Base.props" />
   </Folder>
+  <Folder Name="/Logic/">
+    <Project Path="src/Logic/Logic.Abstracts/Logic.Abstracts.csproj" Id="2cf24a79-15e7-44e0-88a7-1ad0ceeae45d" />
+  </Folder>
   <Folder Name="/Ui/">
     <Project Path="src/Ui/Ui.TestConsole/Ui.TestConsole.csproj" Id="c873ef68-63fd-425f-855d-1ddf29932f35" />
   </Folder>
