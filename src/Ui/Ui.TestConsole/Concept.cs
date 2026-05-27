@@ -16,29 +16,30 @@ namespace codingfreaks.obscene.Ui.TestConsole
 
         public static void Demo(Action drawCallback)
         {
-            var size = new Size(50, 1000);
+            var size = new Size(400, 400);
             var geometries = new List<IGeometry>
             {
                 new Circle
                 {
                     Size = size,
-                    BorderColor = Color.Yellow
+                    BorderColor = Color.Yellow,
+                    Position = new Point(1200, 700)
                 },
-                new Circle
-                {
-                    Size = size,
-                    FillColor = Color.FromArgb(80, Color.Blue)
-                },
-                new Circle
-                {
-                    Size = size
-                }
+                // new Circle
+                // {
+                //     Size = size,
+                //     FillColor = Color.FromArgb(80, Color.Blue)
+                // },
+                // new Circle
+                // {
+                //     Size = size
+                // }
             };
-            var offset = 0;
+            //var offset = 0;
             foreach (var geo in geometries)
             {
-                offset += size.Width + 50;
-                geo.Position = new Point(offset, 100);
+                //offset += size.Width + 1000;
+                //geo.Position = new Point(offset, 100);
                 geo.Draw();
                 geo.Refresh();
             }
