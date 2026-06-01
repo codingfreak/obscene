@@ -1,4 +1,4 @@
-﻿namespace codingfreaks.obscene.Logic.WinApi
+namespace codingfreaks.obscene.Logic.WinApi
 {
     /// <summary>
     /// Provides internal access to Win32 constants.
@@ -20,6 +20,10 @@
         public const int WS_EX_TOPMOST = 0x00000008; // always on top
         public const int WS_EX_TRANSPARENT = 0x00000020; // click-through
         public const int WS_POPUP = unchecked((int)0x80000000);
+
+        public const uint SWP_NOSIZE = 0x0001; // don't change width/height
+        public const uint SWP_NOZORDER = 0x0004; // don't change z-order
+        public const uint SWP_NOACTIVATE = 0x0010; // don't activate the window
 
         public static readonly Delegates.WndProcDelegate s_wndProc = WinApiHelper.WndProc;
 

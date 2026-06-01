@@ -7,4 +7,7 @@
     <ItemGroup>
         <PackageReference Include="System.Drawing.Common" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Logic.Abstracts\Logic.Abstracts.csproj" />
+    </ItemGroup>
 </Project>

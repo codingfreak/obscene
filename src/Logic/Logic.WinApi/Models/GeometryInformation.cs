@@ -1,4 +1,4 @@
-﻿namespace codingfreaks.obscene.Logic.WinApi.Models
+namespace codingfreaks.obscene.Logic.WinApi.Models
 {
     /// <summary>
     /// Transports pointers which are generated during drawing of forms with Win API in order to be able to later pass those

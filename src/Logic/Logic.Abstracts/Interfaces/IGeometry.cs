@@ -1,4 +1,4 @@
-﻿namespace codingfreaks.obscene.Logic.Abstracts.Interfaces
+namespace codingfreaks.obscene.Logic.Abstracts.Interfaces
 {
     using System.Drawing;
 

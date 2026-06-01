@@ -1,4 +1,4 @@
-﻿namespace codingfreaks.obscene.Logic.WinApi
+namespace codingfreaks.obscene.Logic.WinApi
 {
     using System.Runtime.InteropServices;
 
@@ -96,5 +96,13 @@
             uint crKey,
             ref BLENDFUNCTION pblend,
             uint dwFlags);
+
+        [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int x, int y,
+            int cx, int cy,
+            uint uFlags);
     }
 }
