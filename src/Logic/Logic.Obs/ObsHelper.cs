@@ -44,7 +44,7 @@ namespace codingfreaks.obscene.Logic.Obs
         /// </summary>
         /// <returns></returns>
         /// <exception cref="DirectoryNotFoundException"></exception>
-        public static async ValueTask<Dictionary<string, ObsSettings>> LoadDefaultSceneSettingsAsync()
+        public static async ValueTask<Dictionary<string, ObsSceneSettings>> LoadDefaultSceneSettingsAsync()
         {
             var path = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -56,7 +56,7 @@ namespace codingfreaks.obscene.Logic.Obs
             {
                 throw new DirectoryNotFoundException($"Default expected OBS scene dir '{path}' not found.");
             }
-            var result = new Dictionary<string, ObsSettings>();
+            var result = new Dictionary<string, ObsSceneSettings>();
             foreach (var file in dirInfo.GetFiles("*.json"))
             {
                 var settings = await LoadSettingsAsync(file.FullName);
@@ -72,7 +72,7 @@ namespace codingfreaks.obscene.Logic.Obs
         /// <returns></returns>
         /// <exception cref="FileNotFoundException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        public static async ValueTask<ObsSettings> LoadSettingsAsync(string filePath)
+        public static async ValueTask<ObsSceneSettings> LoadSettingsAsync(string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -81,7 +81,7 @@ namespace codingfreaks.obscene.Logic.Obs
             var fileContent = await File.ReadAllTextAsync(filePath);
             try
             {
-                var settings = JsonSerializer.Deserialize<ObsSettings>(fileContent);
+                var settings = JsonSerializer.Deserialize<ObsSceneSettings>(fileContent);
                 return settings ?? throw new InvalidOperationException("Invalid OBS settings file.");
             }
             catch (Exception ex)

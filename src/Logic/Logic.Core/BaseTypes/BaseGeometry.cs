@@ -1,12 +1,17 @@
 namespace codingfreaks.obscene.Logic.Core.BaseTypes
 {
-    using System.Drawing;
-
     using Abstracts.Enumerations;
     using Abstracts.Interfaces;
 
+    using System.Drawing;
+    using System.Text.Json.Serialization;
+
+    using Geometries;
+
     using WinApi;
     using WinApi.Models;
+
+    using Rectangle = System.Drawing.Rectangle;
 
     /// <summary>
     /// Abstract base type for all drawable geometries.
@@ -210,9 +215,7 @@ namespace codingfreaks.obscene.Logic.Core.BaseTypes
 
         #region properties
 
-        /// <summary>
-        /// The type of the geometry.
-        /// </summary>
+        /// <inheritdoc/>
         public abstract GeometryType GeometryType { get; }
 
         /// <summary>

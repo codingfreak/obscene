@@ -28,6 +28,9 @@ namespace codingfreaks.obscene.Logic.WinApi
             IntPtr hInstance,
             IntPtr lpParam);
 
+        [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern int DestroyWindow(IntPtr hWnd);
+
         [DllImport("user32.dll", EntryPoint = "DefWindowProcW", ExactSpelling = true)]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 

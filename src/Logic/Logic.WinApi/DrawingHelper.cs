@@ -28,6 +28,7 @@ namespace codingfreaks.obscene.Logic.WinApi
         /// <param name="info">The information retrieved by an drawing method.</param>
         public static void CleanupWindow(GeometryInformation info)
         {
+            WinApiHelper.DestroyWindow(info.Handle);
             WinApiHelper.ReleaseDC(IntPtr.Zero, info.ScreenDeviceContext);
             if (info.Bitmap != IntPtr.Zero)
             {
@@ -246,6 +247,7 @@ namespace codingfreaks.obscene.Logic.WinApi
 
         /// <summary>
         /// </summary>
+        /// <param name="type"></param>
         /// <param name="geo"></param>
         /// <param name="newPosition"></param>
         /// <param name="newSize"></param>

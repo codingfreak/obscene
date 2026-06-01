@@ -1,31 +1,26 @@
 namespace codingfreaks.obscene.Logic.Obs.Models
 {
+    using System.Drawing;
     using System.Text.Json.Serialization;
 
+    /// <summary>
+    /// Represents data which can be read from OBS scene data files.
+    /// </summary>
     public class ObsSceneSettings
     {
         #region properties
 
-        [JsonPropertyName("custom_size")]
-        public bool IsCustomSize { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = null!;
 
-        [JsonPropertyName("items")]
-        public ObsSceneDevice[] Devices { get; set; } = null!;
-
-        [JsonPropertyName("monitor_id")]
-        public string MonitorId { get; set; } = null!;
+        [JsonPropertyName("current_scene")]
+        public string CurrentScene { get; set; } = null!;
 
         [JsonPropertyName("resolution")]
-        public string Resolution { get; set; } = null!;
+        public Size Resolution { get; set; }
 
-        [JsonPropertyName("video_format")]
-        public int VideoFormat { get; set; }
-
-        [JsonPropertyName("active")]
-        public bool IsActive { get; set; }
-
-        [JsonPropertyName("device_id")]
-        public string DeviceId { get; set; } = null!;
+        [JsonPropertyName("sources")]
+        public ObsScene[] Scenes { get; set; } = null!;
 
         #endregion
     }

@@ -26,7 +26,7 @@ namespace codingfreaks.obscene.Logic.Obs.Models
         public string Id { get; set; } = null!;
 
         [JsonPropertyName("settings")]
-        public ObsSceneSettings Settings { get; set; } = null!;
+        public ObsSceneSetting Settings { get; set; } = null!;
 
         #endregion
     }
