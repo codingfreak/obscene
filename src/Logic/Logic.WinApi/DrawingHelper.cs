@@ -1,6 +1,3 @@
-// ReSharper disable InconsistentNaming
-// ReSharper disable ConvertToUsingDeclaration
-
 namespace codingfreaks.obscene.Logic.WinApi
 {
     using System.ComponentModel;
