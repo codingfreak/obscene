@@ -2,6 +2,9 @@ namespace codingfreaks.obscene.Logic.Obs.Models
 {
     using System.Text.Json.Serialization;
 
+    /// <summary>
+    /// Represents the settings of scene in the OBS JSON file.
+    /// </summary>
     public class ObsSceneSetting
     {
         #region properties

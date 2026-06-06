@@ -2,6 +2,9 @@ namespace codingfreaks.obscene.Logic.Obs.Models
 {
     using System.Text.Json.Serialization;
 
+    /// <summary>
+    /// Represents a single device of a scene in the OBS JSON file.
+    /// </summary>
     public class ObsSceneDevice
     {
         #region methods
@@ -19,6 +22,9 @@ namespace codingfreaks.obscene.Logic.Obs.Models
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
+        /// <summary>
+        /// The device name.
+        /// </summary>
         [JsonPropertyName("name")]
         public string Name { get; set; } = null!;
 
@@ -31,30 +37,21 @@ namespace codingfreaks.obscene.Logic.Obs.Models
         [JsonPropertyName("locked")]
         public bool IsLocked { get; set; }
 
-        public double rot { get; set; }
-
-        public int align { get; set; }
-
-        public int bounds_type { get; set; }
-
-        public int bounds_align { get; set; }
-
-        public bool bounds_crop { get; set; }
-
-        public int crop_left { get; set; }
-
-        public int crop_top { get; set; }
-
-        public int crop_right { get; set; }
-
-        public int crop_bottom { get; set; }
-
+        /// <summary>
+        /// The position of the device on the screen.
+        /// </summary>
         [JsonPropertyName("pos")]
         public ObsCoordinate Position { get; set; } = null!;
 
+        /// <summary>
+        /// The relative position of the device on the screeen.
+        /// </summary>
         [JsonPropertyName("pos_rel")]
         public ObsCoordinate RelativePosition { get; set; } = null!;
 
+        /// <summary>
+        /// The scale-factor.
+        /// </summary>
         [JsonPropertyName("scale")]
         public ObsCoordinate Scale { get; set; } = null!;
 

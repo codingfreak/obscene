@@ -7,7 +7,7 @@ namespace codingfreaks.obscene.Logic.Abstracts.Interfaces
     /// <summary>
     /// Must be implemented by all types which represent forms drawn to the screen.
     /// </summary>
-    public interface IGeometry : IDisposable
+    public interface IGeometry : IDisposable, ICloneable
     {
         #region methods
 

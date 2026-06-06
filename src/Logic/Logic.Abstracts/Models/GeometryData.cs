@@ -1,16 +1,15 @@
-using codingfreaks.obscene.Logic.Abstracts.Enumerations;
-
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
-
 namespace codingfreaks.obscene.Logic.Abstracts.Models
 {
-    using Interfaces;
+    using System.Drawing;
 
-    public class Geometry
+    using Enumerations;
+
+    /// <summary>
+    /// Represents geometry information on (de-)serialization.
+    /// </summary>
+    public class GeometryData
     {
+        #region properties
 
         /// <summary>
         /// The type of the geometry.
@@ -30,17 +29,18 @@ namespace codingfreaks.obscene.Logic.Abstracts.Models
         /// <summary>
         /// The fill color to use.
         /// </summary>
-        public ColorDefinition FillColor { get; set; } = null!;
+        public ColorData FillColor { get; set; } = null!;
 
         /// <summary>
         /// The optional border color to use.
         /// </summary>
-        public ColorDefinition? BorderColor { get; set; }
+        public ColorData? BorderColor { get; set; }
 
         /// <summary>
         /// The optional width of the border.
         /// </summary>
         public int? BorderWidth { get; set; }
 
+        #endregion
     }
 }

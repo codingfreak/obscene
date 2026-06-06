@@ -8,22 +8,51 @@ namespace codingfreaks.obscene.Logic.WinApi
         #region constants
 
         public const byte AC_SRC_ALPHA = 0x01;
+
         public const byte AC_SRC_OVER = 0x00;
-        public const byte CircleAlpha = 128; // 0=invisible, 255=opaque (128 ≈ 50%)
+
+        /// <summary>
+        /// 0=invisible, 255=opaque (128 ≈ 50%)
+        /// </summary>
+        public const byte CircleAlpha = 128;
+
+        /// <summary>
+        /// Don't activate the window.
+        /// </summary>
+        public const uint SWP_NOACTIVATE = 0x0010;
+
+        /// <summary>
+        /// Don't change width/height.
+        /// </summary>
+        public const uint SWP_NOSIZE = 0x0001;
+
+        /// <summary>
+        /// Don't change z-order.
+        /// </summary>
+        public const uint SWP_NOZORDER = 0x0004;
 
         public const uint ULW_ALPHA = 0x02;
 
         public const uint WM_DESTROY = 0x0002;
 
         public const int WS_EX_LAYERED = 0x00080000;
-        public const int WS_EX_TOOLWINDOW = 0x00000080; // hide from taskbar/Alt-Tab
-        public const int WS_EX_TOPMOST = 0x00000008; // always on top
-        public const int WS_EX_TRANSPARENT = 0x00000020; // click-through
-        public const int WS_POPUP = unchecked((int)0x80000000);
 
-        public const uint SWP_NOSIZE = 0x0001; // don't change width/height
-        public const uint SWP_NOZORDER = 0x0004; // don't change z-order
-        public const uint SWP_NOACTIVATE = 0x0010; // don't activate the window
+        /// <summary>
+        /// Hide from taskbar/Alt-Tab
+        /// </summary>
+        public const int WS_EX_TOOLWINDOW = 0x00000080;
+
+        /// <summary>
+        /// Always on top.
+        /// </summary>
+        public const int WS_EX_TOPMOST = 0x00000008;
+
+        /// <summary>
+        /// Click-through
+        /// </summary>
+        public const int WS_EX_TRANSPARENT = 0x00000020;
+
+        public const int WS_POPUP = unchecked((int)0x80000000);
 
         public static readonly Delegates.WndProcDelegate s_wndProc = WinApiHelper.WndProc;
 
