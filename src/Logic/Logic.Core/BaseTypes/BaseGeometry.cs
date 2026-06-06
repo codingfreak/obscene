@@ -1,17 +1,12 @@
 namespace codingfreaks.obscene.Logic.Core.BaseTypes
 {
+    using System.Drawing;
+
     using Abstracts.Enumerations;
     using Abstracts.Interfaces;
 
-    using System.Drawing;
-    using System.Text.Json.Serialization;
-
-    using Geometries;
-
     using WinApi;
     using WinApi.Models;
-
-    using Rectangle = System.Drawing.Rectangle;
 
     /// <summary>
     /// Abstract base type for all drawable geometries.
@@ -27,6 +22,12 @@ namespace codingfreaks.obscene.Logic.Core.BaseTypes
         #endregion
 
         #region explicit interfaces
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            return CloneInternal();
+        }
 
         /// <inheritdoc />
         public void Dispose()
@@ -74,6 +75,9 @@ namespace codingfreaks.obscene.Logic.Core.BaseTypes
                 Refresh();
             }
         } = Color.FromArgb(50, Color.Red);
+
+        /// <inheritdoc />
+        public abstract GeometryType GeometryType { get; }
 
         /// <inheritdoc />
         public Point Position
@@ -147,6 +151,12 @@ namespace codingfreaks.obscene.Logic.Core.BaseTypes
         }
 
         /// <summary>
+        /// Must be overridden by children to implement cloning.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract object CloneInternal();
+
+        /// <summary>
         /// Can be overriden to dispose any managed instances.
         /// </summary>
         protected virtual void DisposeManagedInstance()
@@ -214,9 +224,6 @@ namespace codingfreaks.obscene.Logic.Core.BaseTypes
         #endregion
 
         #region properties
-
-        /// <inheritdoc/>
-        public abstract GeometryType GeometryType { get; }
 
         /// <summary>
         /// The WinAPI information of the current geometry.

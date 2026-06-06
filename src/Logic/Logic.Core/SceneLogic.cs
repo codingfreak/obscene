@@ -1,12 +1,6 @@
 namespace codingfreaks.obscene.Logic.Core
 {
-    using Abstracts.Enumerations;
-    using Abstracts.Interfaces;
     using Abstracts.Models;
-
-    using Extensions;
-
-    using Geometries;
 
     /// <summary>
     /// Central logic to handle all screen drawings during the program runtime.
@@ -22,7 +16,6 @@ namespace codingfreaks.obscene.Logic.Core
         public SceneLogic(Settings settings)
         {
             Settings = settings;
-            ResolveGeometries();
         }
 
         #endregion
@@ -38,13 +31,12 @@ namespace codingfreaks.obscene.Logic.Core
             {
                 return;
             }
-            foreach (var geo in CurrentScene.ResolvedGeometries)
+            foreach (var geo in CurrentScene.Geometries)
             {
                 // TODO This works on the first switch of a scene but then stops working
                 geo.Dispose();
             }
-            CurrentScene.ResolvedGeometries.Clear();
-            ResolveGeometries();
+            CurrentScene.Geometries.Clear();
         }
 
         /// <summary>
@@ -58,74 +50,12 @@ namespace codingfreaks.obscene.Logic.Core
                 // we have to clear first
                 Clear();
             }
-            CurrentScene = Settings.Scenes[sceneName];
-            foreach (var geo in CurrentScene.ResolvedGeometries)
+            CurrentScene = (Scene)Settings.Scenes[sceneName]
+                .Clone();
+            foreach (var geo in CurrentScene.Geometries)
             {
                 geo.Draw();
             }
-        }
-
-        /// <summary>
-        /// TODO HACK!!! 😒😒😒😒😒😒😒😒😒😒😒😒
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public void ResolveGeometries()
-        {
-            foreach (var scene in Settings.Scenes)
-            {
-                if (scene.Value.ResolvedGeometries.Any())
-                {
-                    continue;
-                }
-                foreach (var loadedGeo in scene.Value.Geometries)
-                {
-                    scene.Value.ResolvedGeometries.Add(ResolveGeometry(loadedGeo));
-                }
-            }
-        }
-
-        /// <summary>
-        /// TODO HACK!!! 😒😒😒😒😒😒😒😒😒😒😒😒
-        /// </summary>
-        /// <param name="loadedGeo"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        private static IGeometry ResolveGeometry(Geometry loadedGeo)
-        {
-            switch (loadedGeo.GeometryType)
-            {
-                case GeometryType.Rectangle:
-                    return new Rectangle
-                    {
-                        Position = loadedGeo.Position,
-                        Size = loadedGeo.Size,
-                        BorderColor = loadedGeo.BorderColor?.ToColor(),
-                        BorderWidth = loadedGeo.BorderWidth,
-                        FillColor = loadedGeo.FillColor.ToColor()
-                    };
-                case GeometryType.Ellipse:
-                    if (loadedGeo.Size.Width == loadedGeo.Size.Height)
-                    {
-                        return new Circle
-                        {
-                            Position = loadedGeo.Position,
-                            Size = loadedGeo.Size,
-                            BorderColor = loadedGeo.BorderColor?.ToColor(),
-                            BorderWidth = loadedGeo.BorderWidth,
-                            FillColor = loadedGeo.FillColor.ToColor()
-                        };
-                    }
-                    return new Ellipse
-                    {
-                        Position = loadedGeo.Position,
-                        Size = loadedGeo.Size,
-                        BorderColor = loadedGeo.BorderColor?.ToColor(),
-                        BorderWidth = loadedGeo.BorderWidth,
-                        FillColor = loadedGeo.FillColor.ToColor()
-                    };
-            }
-            throw new InvalidOperationException("Could not resolve geometry.");
         }
 
         #endregion
