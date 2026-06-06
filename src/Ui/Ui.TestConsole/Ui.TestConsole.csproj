@@ -4,10 +4,14 @@
         <SupportedOSPlatformVersion>6.0</SupportedOSPlatformVersion>
         <TargetPlatformIdentifier>windows</TargetPlatformIdentifier>
         <OutputType>Exe</OutputType>
+        <UserSecretsId>41c6e89f-3a49-47b2-b232-938787c3b782</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\Logic\Logic.Abstracts\Logic.Abstracts.csproj" />
-      <ProjectReference Include="..\..\Logic\Logic.Core\Logic.Core.csproj" />
-      <ProjectReference Include="..\..\Logic\Logic.Obs\Logic.Obs.csproj" />
+        <PackageReference Include="obs-websocket-dotnet" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Logic\Logic.Abstracts\Logic.Abstracts.csproj" />
+        <ProjectReference Include="..\..\Logic\Logic.Core\Logic.Core.csproj" />
+        <ProjectReference Include="..\..\Logic\Logic.Obs\Logic.Obs.csproj" />
     </ItemGroup>
 </Project>

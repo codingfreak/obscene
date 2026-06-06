@@ -10,6 +10,8 @@ namespace codingfreaks.obscene.Ui.TestConsole
     using Logic.Core.Geometries;
     using Logic.Obs;
 
+    using OBSWebsocketDotNet;
+
     using Rectangle = Logic.Core.Geometries.Rectangle;
 
     /// <summary>
@@ -121,6 +123,27 @@ namespace codingfreaks.obscene.Ui.TestConsole
                         break;
                 }
             }
+        }
+
+        public static async Task RunbObsConnectionDemoAsync()
+        {
+            var obs = new OBSWebsocket();
+            obs.Connected += (_, _) =>
+            {
+                Console.WriteLine("Connected to OBS.");
+            };
+            obs.Disconnected += (_, _) =>
+            {
+                Console.WriteLine("Disconnected from OBS.");
+            };
+            obs.CurrentProgramSceneChanged += (_, args) =>
+            {
+                Console.WriteLine($"OBS switched to scene {args.SceneName}");
+            };
+            obs.ConnectAsync("ws://localhost:4455", Environment.GetEnvironmentVariable("Obs:Password"));
+            Console.ReadKey();
+            obs.Disconnect();
+            await Task.Yield();
         }
 
         #endregion

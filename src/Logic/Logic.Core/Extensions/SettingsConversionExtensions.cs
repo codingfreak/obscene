@@ -13,7 +13,7 @@ namespace codingfreaks.obscene.Logic.Core.Extensions
     /// <summary>
     /// Provides extension methods used during settings conversion between serialized and implementation types.
     /// </summary>
-    internal static class SettingsConversionExctensions
+    internal static class SettingsConversionExtensions
     {
         #region methods
 
