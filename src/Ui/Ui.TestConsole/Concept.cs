@@ -1,11 +1,9 @@
 namespace codingfreaks.obscene.Ui.TestConsole
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics;
+    using System.Collections.Concurrent;
     using System.Drawing;
 
     using Logic.Abstracts.Interfaces;
-    using Logic.Abstracts.Models;
     using Logic.Core;
     using Logic.Core.Geometries;
     using Logic.Obs;
@@ -125,11 +123,51 @@ namespace codingfreaks.obscene.Ui.TestConsole
             }
         }
 
-        public static async Task RunbObsConnectionDemoAsync()
+        public static void RunbObsConnectionDemo()
         {
-            var obs = new OBSWebsocket();
-            obs.Connected += (_, _) =>
+            var settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "my.json");
+            var settings = Settings.LoadAsync(settingsPath).GetAwaiter().GetResult();
+            Console.WriteLine("Settings loaded.");
+            var cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
+            var sceneQueue = new ConcurrentQueue<string>();
+            Task.Run(() =>
             {
+                var logic = new SceneLogic(settings);
+                while (!token.IsCancellationRequested)
+                {
+                    if (sceneQueue.TryDequeue(out var sceneName))
+                    {
+                        if (!settings.Scenes.ContainsKey(sceneName))
+                        {
+                            Console.WriteLine($"Unknown scene {sceneName} selected in OBS.");
+                            logic.Clear();
+                            continue;
+                        }
+                        logic.Draw(sceneName);
+                        Console.WriteLine($"obscene switched to scene {sceneName}.");
+                    }
+                    try
+                    {
+                        Task.Delay(20, token).GetAwaiter().GetResult();
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        break;
+                    }
+                }
+                Console.WriteLine("😒 Loop exited.");
+            }, token);
+            var obs = new OBSWebsocket();
+            obs.Connected += (sender, _) =>
+            {
+                var senderObs = sender as OBSWebsocket;
+                if (senderObs == null)
+                {
+                    throw new InvalidOperationException("Strange things happened.");
+                }
+                var sceneName = senderObs.GetCurrentProgramScene();
+                sceneQueue.Enqueue(sceneName);
                 Console.WriteLine("Connected to OBS.");
             };
             obs.Disconnected += (_, _) =>
@@ -139,12 +177,15 @@ namespace codingfreaks.obscene.Ui.TestConsole
             obs.CurrentProgramSceneChanged += (_, args) =>
             {
                 Console.WriteLine($"OBS switched to scene {args.SceneName}");
+                sceneQueue.Enqueue(args.SceneName);
             };
             obs.ConnectAsync("ws://localhost:4455", Environment.GetEnvironmentVariable("Obs:Password"));
             Console.ReadKey();
+            cancellationTokenSource.Cancel();
             obs.Disconnect();
-            await Task.Yield();
         }
+
+        
 
         #endregion
     }
