@@ -33,10 +33,10 @@ namespace codingfreaks.obscene.Logic.Core
             }
             foreach (var geo in CurrentScene.Geometries)
             {
-                // TODO This works on the first switch of a scene but then stops working
                 geo.Dispose();
             }
             CurrentScene.Geometries.Clear();
+            CurrentScene = null;
         }
 
         /// <summary>
