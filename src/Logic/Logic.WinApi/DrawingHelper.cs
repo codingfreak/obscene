@@ -59,16 +59,40 @@ namespace codingfreaks.obscene.Logic.WinApi
             Color? strokeColor = null,
             float? strokeWidth = 2)
         {
-            return DrawGeometry(GeometryType.Ellipse, handle, position, size, fillColor, strokeColor, strokeWidth);
+            return DrawWindow(GeometryType.Ellipse, handle, position, size, fillColor, strokeColor, strokeWidth);
         }
 
         /// <summary>
-        /// Draws a ellipse using the given information to the screen.
+        /// Draws a rectangle using the given information to the screen.
         /// </summary>
         /// <remarks>
         /// Use <see cref="InitializeWindow" /> in order to retrieve the <see cref="handle" />!
         /// </remarks>
-        /// <param name="type"></param>
+        /// <param name="handle">The handle of the created window.</param>
+        /// <param name="position">The absolute position on the screen.</param>
+        /// <param name="size">The size of the rectangle.</param>
+        /// <param name="fillColor">The color to fill the circle with.</param>
+        /// <param name="strokeColor">Optional color for a stroke.</param>
+        /// <param name="strokeWidth">The width of the outline stroke.</param>
+        /// <returns>The information to later move or maybe cleanup the geometry.</returns>
+        public static GeometryInformation DrawRectangle(
+            IntPtr handle,
+            Point position,
+            Size size,
+            Color fillColor,
+            Color? strokeColor = null,
+            float? strokeWidth = 2)
+        {
+            return DrawWindow(GeometryType.Rectangle, handle, position, size, fillColor, strokeColor, strokeWidth);
+        }
+
+        /// <summary>
+        /// Draws a window to the screen based on the information passed.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="InitializeWindow" /> in order to retrieve the <see cref="handle" />!
+        /// </remarks>
+        /// <param name="type">The geometry type to draw the window for.</param>
         /// <param name="handle">The handle of the created window.</param>
         /// <param name="position">The absolute position on the screen.</param>
         /// <param name="size">The size of the ellipse.</param>
@@ -76,7 +100,7 @@ namespace codingfreaks.obscene.Logic.WinApi
         /// <param name="strokeColor">Optional color for a stroke.</param>
         /// <param name="strokeWidth">The width of the outline stroke.</param>
         /// <returns>The information to later move or maybe cleanup the geometry.</returns>
-        public static GeometryInformation DrawGeometry(
+        public static GeometryInformation DrawWindow(
             GeometryType type,
             IntPtr handle,
             Point position,
@@ -175,30 +199,6 @@ namespace codingfreaks.obscene.Logic.WinApi
         }
 
         /// <summary>
-        /// Draws a rectangle using the given information to the screen.
-        /// </summary>
-        /// <remarks>
-        /// Use <see cref="InitializeWindow" /> in order to retrieve the <see cref="handle" />!
-        /// </remarks>
-        /// <param name="handle">The handle of the created window.</param>
-        /// <param name="position">The absolute position on the screen.</param>
-        /// <param name="size">The size of the rectangle.</param>
-        /// <param name="fillColor">The color to fill the circle with.</param>
-        /// <param name="strokeColor">Optional color for a stroke.</param>
-        /// <param name="strokeWidth">The width of the outline stroke.</param>
-        /// <returns>The information to later move or maybe cleanup the geometry.</returns>
-        public static GeometryInformation DrawRectangle(
-            IntPtr handle,
-            Point position,
-            Size size,
-            Color fillColor,
-            Color? strokeColor = null,
-            float? strokeWidth = 2)
-        {
-            return DrawGeometry(GeometryType.Rectangle, handle, position, size, fillColor, strokeColor, strokeWidth);
-        }
-
-        /// <summary>
         /// Needs to be called in order to retrieve a valid drawing context for any geometry.
         /// </summary>
         /// <param name="position">The position on the screen.</param>
@@ -246,14 +246,15 @@ namespace codingfreaks.obscene.Logic.WinApi
         }
 
         /// <summary>
+        /// Is used to redraw a window.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="geo"></param>
-        /// <param name="newPosition"></param>
-        /// <param name="newSize"></param>
-        /// <param name="fillColor"></param>
-        /// <param name="strokeColor"></param>
-        /// <param name="strokeWidth"></param>
+        /// <param name="type">The geometry type to draw the</param>
+        /// <param name="geo">The geometry information.</param>
+        /// <param name="newPosition">The new position.</param>
+        /// <param name="newSize">The new size.</param>
+        /// <param name="fillColor">The fill color to use.</param>
+        /// <param name="strokeColor">Optional stroke color to use.</param>
+        /// <param name="strokeWidth">Optional width of the stroke in px.</param>
         public static GeometryInformation MoveAndResizeGeometry(
             GeometryType type,
             GeometryInformation geo,
@@ -368,7 +369,7 @@ namespace codingfreaks.obscene.Logic.WinApi
         /// <param name="handle">The handle of the created window.</param>
         public static void ShowWindow(IntPtr handle)
         {
-            WinApiHelper.ShowWindow(handle, 1 /* SW_SHOWNORMAL */);
+            WinApiHelper.ShowWindow(handle, WinApiConstants.SW_SHOWNORMAL);
         }
 
         #endregion

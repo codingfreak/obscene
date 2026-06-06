@@ -26,6 +26,8 @@ namespace codingfreaks.obscene.Logic.WinApi
         /// </summary>
         public const uint SWP_NOSIZE = 0x0001;
 
+        public const int SW_SHOWNORMAL = 1;
+
         /// <summary>
         /// Don't change z-order.
         /// </summary>

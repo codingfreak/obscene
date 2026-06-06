@@ -134,7 +134,6 @@ namespace codingfreaks.obscene.Logic.Core.Extensions
             return new SettingsData
             {
                 Scenes = original.Scenes.ToDictionary(s => s.Key, s => s.Value.ToSceneData())
-                    .AsReadOnly()
             };
         }
 

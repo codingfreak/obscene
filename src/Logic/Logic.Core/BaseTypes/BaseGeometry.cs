@@ -183,7 +183,7 @@ namespace codingfreaks.obscene.Logic.Core.BaseTypes
             {
                 throw new InvalidOperationException("No handle was present.");
             }
-            return DrawingHelper.DrawGeometry(GeometryType, Handle.Value, Position, Size, FillColor, BorderColor);
+            return DrawingHelper.DrawWindow(GeometryType, Handle.Value, Position, Size, FillColor, BorderColor);
         }
 
         /// <summary>

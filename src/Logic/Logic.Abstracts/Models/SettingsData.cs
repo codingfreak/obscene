@@ -12,7 +12,7 @@ namespace codingfreaks.obscene.Logic.Abstracts.Models
         /// <summary>
         /// The collection of scenes where the key is the scene name in OBS and the value the scene information.
         /// </summary>
-        public ReadOnlyDictionary<string, SceneData> Scenes { get; set; } = ReadOnlyDictionary<string, SceneData>.Empty;
+        public Dictionary<string, SceneData> Scenes { get; set; } = new();
 
         #endregion
     }
