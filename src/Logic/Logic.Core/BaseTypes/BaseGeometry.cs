@@ -1,11 +1,17 @@
-﻿namespace codingfreaks.obscene.Logic.Core.BaseTypes
+namespace codingfreaks.obscene.Logic.Core.BaseTypes
 {
-    using System.Drawing;
-
+    using Abstracts.Enumerations;
     using Abstracts.Interfaces;
+
+    using System.Drawing;
+    using System.Text.Json.Serialization;
+
+    using Geometries;
 
     using WinApi;
     using WinApi.Models;
+
+    using Rectangle = System.Drawing.Rectangle;
 
     /// <summary>
     /// Abstract base type for all drawable geometries.
@@ -30,10 +36,26 @@
         }
 
         /// <inheritdoc />
-        public Color? BorderColor { get; set; }
+        public Color? BorderColor
+        {
+            get;
+            set
+            {
+                field = value;
+                Refresh();
+            }
+        }
 
         /// <inheritdoc />
-        public int? BorderWidth { get; set; }
+        public int? BorderWidth
+        {
+            get;
+            set
+            {
+                field = value;
+                Refresh();
+            }
+        }
 
         /// <inheritdoc />
         public void Draw()
@@ -43,7 +65,15 @@
         }
 
         /// <inheritdoc />
-        public Color FillColor { get; set; } = Color.FromArgb(50, Color.Red);
+        public Color FillColor
+        {
+            get;
+            set
+            {
+                field = value;
+                Refresh();
+            }
+        } = Color.FromArgb(50, Color.Red);
 
         /// <inheritdoc />
         public Point Position
@@ -63,6 +93,18 @@
         /// <inheritdoc />
         public void Refresh()
         {
+            if (GeometryInformation == null)
+            {
+                return;
+            }
+            GeometryInformation = DrawingHelper.MoveAndResizeGeometry(
+                GeometryType,
+                GeometryInformation,
+                Position,
+                Size,
+                FillColor,
+                BorderColor,
+                BorderWidth);
         }
 
         /// <inheritdoc />
@@ -125,7 +167,14 @@
         /// Must be overridden to initialize the actual geometry (drawing it).
         /// </summary>
         /// <returns>The geometry information.</returns>
-        protected abstract GeometryInformation? InitGeometry();
+        protected virtual GeometryInformation InitGeometry()
+        {
+            if (Handle == null)
+            {
+                throw new InvalidOperationException("No handle was present.");
+            }
+            return DrawingHelper.DrawGeometry(GeometryType, Handle.Value, Position, Size, FillColor, BorderColor);
+        }
 
         /// <summary>
         /// Internal dispose implementation.
@@ -166,8 +215,17 @@
 
         #region properties
 
+        /// <inheritdoc/>
+        public abstract GeometryType GeometryType { get; }
+
+        /// <summary>
+        /// The WinAPI information of the current geometry.
+        /// </summary>
         protected GeometryInformation? GeometryInformation { get; private set; }
 
+        /// <summary>
+        /// The handle of the window.
+        /// </summary>
         protected nint? Handle => _windowContext?.Handle;
 
         #endregion

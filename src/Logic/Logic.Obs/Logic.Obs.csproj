@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props"/>
+    <ItemGroup>
+      <ProjectReference Include="..\Logic.Abstracts\Logic.Abstracts.csproj" />
+    </ItemGroup>
+</Project>

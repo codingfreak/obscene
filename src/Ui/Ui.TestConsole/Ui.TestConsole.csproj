@@ -6,6 +6,8 @@
         <OutputType>Exe</OutputType>
     </PropertyGroup>
     <ItemGroup>
+      <ProjectReference Include="..\..\Logic\Logic.Abstracts\Logic.Abstracts.csproj" />
       <ProjectReference Include="..\..\Logic\Logic.Core\Logic.Core.csproj" />
+      <ProjectReference Include="..\..\Logic\Logic.Obs\Logic.Obs.csproj" />
     </ItemGroup>
 </Project>

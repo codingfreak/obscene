@@ -1,6 +1,8 @@
-﻿namespace codingfreaks.obscene.Logic.Abstracts.Interfaces
+namespace codingfreaks.obscene.Logic.Abstracts.Interfaces
 {
     using System.Drawing;
+
+    using Enumerations;
 
     /// <summary>
     /// Must be implemented by all types which represent forms drawn to the screen.
@@ -22,6 +24,11 @@
         #endregion
 
         #region properties
+
+        /// <summary>
+        /// The type of the geometry.
+        /// </summary>
+        GeometryType GeometryType { get; }
 
         /// <summary>
         /// Gets or sets the absolute position on the screen.

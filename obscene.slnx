@@ -9,6 +9,7 @@
   <Folder Name="/Logic/">
     <Project Path="src/Logic/Logic.Abstracts/Logic.Abstracts.csproj" Id="2cf24a79-15e7-44e0-88a7-1ad0ceeae45d" />
     <Project Path="src/Logic/Logic.Core/Logic.Core.csproj" />
+    <Project Path="src/Logic/Logic.Obs/Logic.Obs.csproj" />
     <Project Path="src/Logic/Logic.WinApi/Logic.WinApi.csproj" />
   </Folder>
   <Folder Name="/Ui/">

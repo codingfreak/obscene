@@ -1,4 +1,4 @@
-﻿namespace codingfreaks.obscene.Logic.WinApi
+namespace codingfreaks.obscene.Logic.WinApi
 {
     using System.Runtime.InteropServices;
 
@@ -27,6 +27,9 @@
             IntPtr hMenu,
             IntPtr hInstance,
             IntPtr lpParam);
+
+        [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern int DestroyWindow(IntPtr hWnd);
 
         [DllImport("user32.dll", EntryPoint = "DefWindowProcW", ExactSpelling = true)]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
@@ -96,5 +99,13 @@
             uint crKey,
             ref BLENDFUNCTION pblend,
             uint dwFlags);
+
+        [DllImport("user32.dll", ExactSpelling = true, SetLastError = true)]
+        public static extern bool SetWindowPos(
+            IntPtr hWnd,
+            IntPtr hWndInsertAfter,
+            int x, int y,
+            int cx, int cy,
+            uint uFlags);
     }
 }

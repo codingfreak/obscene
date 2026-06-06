@@ -1,12 +1,15 @@
-﻿// ReSharper disable InconsistentNaming
+// ReSharper disable InconsistentNaming
 // ReSharper disable ConvertToUsingDeclaration
 
 namespace codingfreaks.obscene.Logic.WinApi
 {
+    using System.ComponentModel;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.Runtime.InteropServices;
+
+    using Abstracts.Enumerations;
 
     using ApiTypes;
 
@@ -20,11 +23,12 @@ namespace codingfreaks.obscene.Logic.WinApi
         #region methods
 
         /// <summary>
-        /// Cleansup a drawn window using the provided <paramref name="info" />.
+        /// Cleansup a drawn window using the provided <paramref Name="info" />.
         /// </summary>
         /// <param name="info">The information retrieved by an drawing method.</param>
         public static void CleanupWindow(GeometryInformation info)
         {
+            WinApiHelper.DestroyWindow(info.Handle);
             WinApiHelper.ReleaseDC(IntPtr.Zero, info.ScreenDeviceContext);
             if (info.Bitmap != IntPtr.Zero)
             {
@@ -35,27 +39,57 @@ namespace codingfreaks.obscene.Logic.WinApi
         }
 
         /// <summary>
-        /// Draws a circle using the given information to the screen.
+        /// Draws a ellipse using the given information to the screen.
         /// </summary>
         /// <remarks>
         /// Use <see cref="InitializeWindow" /> in order to retrieve the <see cref="handle" />!
         /// </remarks>
         /// <param name="handle">The handle of the created window.</param>
         /// <param name="position">The absolute position on the screen.</param>
-        /// <param name="radius">The radius of the circle.</param>
+        /// <param name="size">The size of the rectangle.</param>
         /// <param name="fillColor">The color to fill the circle with.</param>
-        /// <param name="transparency">The transparency of the fill area.</param>
         /// <param name="strokeColor">Optional color for a stroke.</param>
-        /// <returns>The informaiton to later move or maybe cleanup the geometry.</returns>
-        public static GeometryInformation DrawCircle(
+        /// <param name="strokeWidth">The width of the outline stroke.</param>
+        /// <returns>The information to later move or maybe cleanup the geometry.</returns>
+        public static GeometryInformation DrawEllipse(
             IntPtr handle,
             Point position,
-            int radius,
+            Size size,
             Color fillColor,
             Color? strokeColor = null,
             float? strokeWidth = 2)
         {
-            using (var bmp = new Bitmap(position.X, position.Y, PixelFormat.Format32bppArgb))
+            return DrawGeometry(GeometryType.Ellipse, handle, position, size, fillColor, strokeColor, strokeWidth);
+        }
+
+        /// <summary>
+        /// Draws a ellipse using the given information to the screen.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="InitializeWindow" /> in order to retrieve the <see cref="handle" />!
+        /// </remarks>
+        /// <param name="type"></param>
+        /// <param name="handle">The handle of the created window.</param>
+        /// <param name="position">The absolute position on the screen.</param>
+        /// <param name="size">The size of the ellipse.</param>
+        /// <param name="fillColor">The color to fill the circle with.</param>
+        /// <param name="strokeColor">Optional color for a stroke.</param>
+        /// <param name="strokeWidth">The width of the outline stroke.</param>
+        /// <returns>The information to later move or maybe cleanup the geometry.</returns>
+        public static GeometryInformation DrawGeometry(
+            GeometryType type,
+            IntPtr handle,
+            Point position,
+            Size size,
+            Color fillColor,
+            Color? strokeColor = null,
+            float? strokeWidth = 2)
+        {
+            if (type == GeometryType.Undefined)
+            {
+                throw new InvalidEnumArgumentException(nameof(type), (int)type, typeof(GeometryType));
+            }
+            using (var bmp = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppArgb))
             {
                 using (var g = Graphics.FromImage(bmp))
                 {
@@ -63,31 +97,50 @@ namespace codingfreaks.obscene.Logic.WinApi
                     g.SmoothingMode = SmoothingMode.AntiAlias;
                     using (var brush = new SolidBrush(fillColor))
                     {
-                        g.FillEllipse(brush, 0, 0, radius - 1, radius - 1);
+                        switch (type)
+                        {
+                            case GeometryType.Rectangle:
+                                g.FillRectangle(brush, 0, 0, size.Width - 1, size.Height - 1);
+                                break;
+                            case GeometryType.Ellipse:
+                                g.FillEllipse(brush, 0, 0, size.Width - 1, size.Height - 1);
+                                break;
+                        }
                         if (strokeColor != null && strokeWidth != null)
                         {
                             using (var pen = new Pen(strokeColor.Value, strokeWidth.Value))
                             {
-                                g.DrawEllipse(
-                                    pen,
-                                    1,
-                                    1,
-                                    radius - (strokeWidth.Value + 1),
-                                    radius - (strokeWidth.Value + 1));
+                                switch (type)
+                                {
+                                    case GeometryType.Rectangle:
+                                        g.DrawRectangle(
+                                            pen,
+                                            1,
+                                            1,
+                                            size.Width - (strokeWidth.Value + 1),
+                                            size.Height - (strokeWidth.Value + 1));
+                                        break;
+                                    case GeometryType.Ellipse:
+                                        g.DrawEllipse(
+                                            pen,
+                                            1,
+                                            1,
+                                            size.Width - (strokeWidth.Value + 1),
+                                            size.Height - (strokeWidth.Value + 1));
+                                        break;
+                                }
                             }
                         }
                     }
                 }
                 var screenDc = WinApiHelper.GetDC(IntPtr.Zero);
                 var memDc = WinApiHelper.CreateCompatibleDC(screenDc);
-                var hBitmap = IntPtr.Zero;
-                var oldBitmap = IntPtr.Zero;
-                hBitmap = bmp.GetHbitmap(Color.FromArgb(0));
-                oldBitmap = WinApiHelper.SelectObject(memDc, hBitmap);
-                var size = new SIZE
+                var hBitmap = bmp.GetHbitmap(Color.FromArgb(0));
+                var oldBitmap = WinApiHelper.SelectObject(memDc, hBitmap);
+                var ptSize = new SIZE
                 {
-                    cx = radius,
-                    cy = radius
+                    cx = size.Width,
+                    cy = size.Height
                 };
                 var ptSrc = new POINT
                 {
@@ -110,7 +163,7 @@ namespace codingfreaks.obscene.Logic.WinApi
                     handle,
                     screenDc,
                     ref ptDst,
-                    ref size,
+                    ref ptSize,
                     memDc,
                     ref ptSrc,
                     0,
@@ -119,6 +172,30 @@ namespace codingfreaks.obscene.Logic.WinApi
                 ShowWindow(handle);
                 return new GeometryInformation(handle, screenDc, memDc, hBitmap, oldBitmap);
             }
+        }
+
+        /// <summary>
+        /// Draws a rectangle using the given information to the screen.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="InitializeWindow" /> in order to retrieve the <see cref="handle" />!
+        /// </remarks>
+        /// <param name="handle">The handle of the created window.</param>
+        /// <param name="position">The absolute position on the screen.</param>
+        /// <param name="size">The size of the rectangle.</param>
+        /// <param name="fillColor">The color to fill the circle with.</param>
+        /// <param name="strokeColor">Optional color for a stroke.</param>
+        /// <param name="strokeWidth">The width of the outline stroke.</param>
+        /// <returns>The information to later move or maybe cleanup the geometry.</returns>
+        public static GeometryInformation DrawRectangle(
+            IntPtr handle,
+            Point position,
+            Size size,
+            Color fillColor,
+            Color? strokeColor = null,
+            float? strokeWidth = 2)
+        {
+            return DrawGeometry(GeometryType.Rectangle, handle, position, size, fillColor, strokeColor, strokeWidth);
         }
 
         /// <summary>
@@ -169,7 +246,124 @@ namespace codingfreaks.obscene.Logic.WinApi
         }
 
         /// <summary>
-        /// Ensures that a window with a given <paramref name="handle" /> is shown.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="geo"></param>
+        /// <param name="newPosition"></param>
+        /// <param name="newSize"></param>
+        /// <param name="fillColor"></param>
+        /// <param name="strokeColor"></param>
+        /// <param name="strokeWidth"></param>
+        public static GeometryInformation MoveAndResizeGeometry(
+            GeometryType type,
+            GeometryInformation geo,
+            Point newPosition,
+            Size newSize,
+            Color fillColor,
+            Color? strokeColor = null,
+            float? strokeWidth = 2)
+        {
+            // 1. Move and resize the window frame
+            WinApiHelper.SetWindowPos(
+                geo.Handle,
+                IntPtr.Zero,
+                newPosition.X,
+                newPosition.Y,
+                newSize.Width,
+                newSize.Height,
+                WinApiConstants.SWP_NOZORDER | WinApiConstants.SWP_NOACTIVATE);
+            // 2. Clean up the old GDI objects before creating new ones
+            WinApiHelper.SelectObject(geo.MemoryDeviceContext, geo.OldBitmap);
+            WinApiHelper.DeleteObject(geo.Bitmap);
+            WinApiHelper.DeleteDC(geo.MemoryDeviceContext);
+            WinApiHelper.ReleaseDC(IntPtr.Zero, geo.ScreenDeviceContext);
+            // 3. Redraw into a new bitmap at the new size
+            using var bmp = new Bitmap(newSize.Width, newSize.Height, PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.Transparent);
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                using (var brush = new SolidBrush(fillColor))
+                {
+                    switch (type)
+                    {
+                        case GeometryType.Rectangle:
+                            g.FillRectangle(brush, 0, 0, newSize.Width, newSize.Height);
+                            break;
+                        case GeometryType.Ellipse:
+                            g.FillEllipse(brush, 0, 0, newSize.Width, newSize.Height);
+                            break;
+                    }
+                    if (strokeColor != null && strokeWidth != null)
+                    {
+                        using (var pen = new Pen(strokeColor.Value, strokeWidth.Value))
+                        {
+                            switch (type)
+                            {
+                                case GeometryType.Rectangle:
+                                    g.DrawRectangle(
+                                        pen,
+                                        1,
+                                        1,
+                                        newSize.Width - (strokeWidth.Value + 1),
+                                        newSize.Height - (strokeWidth.Value + 1));
+                                    break;
+                                case GeometryType.Ellipse:
+                                    g.DrawEllipse(
+                                        pen,
+                                        1,
+                                        1,
+                                        newSize.Width - (strokeWidth.Value + 1),
+                                        newSize.Height - (strokeWidth.Value + 1));
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            // re-calc the values
+            var screenDc = WinApiHelper.GetDC(IntPtr.Zero);
+            var memDc = WinApiHelper.CreateCompatibleDC(screenDc);
+            var hBitmap = bmp.GetHbitmap(Color.FromArgb(0));
+            var oldBitmap = WinApiHelper.SelectObject(memDc, hBitmap);
+            var ptDst = new POINT
+            {
+                x = newPosition.X,
+                y = newPosition.Y
+            };
+            var ptSrc = new POINT
+            {
+                x = 0,
+                y = 0
+            };
+            var size = new SIZE
+            {
+                cx = newSize.Width,
+                cy = newSize.Height
+            };
+            var blend = new BLENDFUNCTION
+            {
+                BlendOp = WinApiConstants.AC_SRC_OVER,
+                BlendFlags = 0,
+                SourceConstantAlpha = 255,
+                AlphaFormat = WinApiConstants.AC_SRC_ALPHA
+            };
+            // 4. Push the new surface via UpdateLayeredWindow
+            WinApiHelper.UpdateLayeredWindow(
+                geo.Handle,
+                screenDc,
+                ref ptDst,
+                ref size,
+                memDc,
+                ref ptSrc,
+                0,
+                ref blend,
+                WinApiConstants.ULW_ALPHA);
+            return new GeometryInformation(geo.Handle, screenDc, memDc, hBitmap, oldBitmap);
+        }
+
+        /// <summary>
+        /// Ensures that a window with a given <paramref Name="handle" /> is shown.
         /// </summary>
         /// <param name="handle">The handle of the created window.</param>
         public static void ShowWindow(IntPtr handle)

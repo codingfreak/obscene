@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props"/>
+    <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props" />
     <PropertyGroup>
         <SupportedOSPlatformVersion>6.0</SupportedOSPlatformVersion>
         <TargetPlatformIdentifier>windows</TargetPlatformIdentifier>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="System.Drawing.Common"/>
+        <PackageReference Include="System.Drawing.Common" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Logic.Abstracts\Logic.Abstracts.csproj" />
