@@ -1,0 +1,10 @@
+{
+    "profiles": {
+        "Console": {
+            "commandName": "Project",
+            "environmentVariables": {
+                "Obs:Password": "p1YBHD0mLRL0GkNj"
+            }
+        }
+    }
+}

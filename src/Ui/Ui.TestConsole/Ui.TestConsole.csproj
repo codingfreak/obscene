@@ -7,6 +7,14 @@
         <UserSecretsId>41c6e89f-3a49-47b2-b232-938787c3b782</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
+      <None Remove="configs\my.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="configs\my.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="obs-websocket-dotnet" />
     </ItemGroup>
     <ItemGroup>

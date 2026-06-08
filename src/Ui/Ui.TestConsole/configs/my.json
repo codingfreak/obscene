@@ -1,0 +1,157 @@
+{
+    "scenes":
+    {
+        "1080 BottomRight":
+        {
+            "name": "1080 BottomRight",
+            "obsDeviceName": "SYS CamCircle",
+            "geometries":
+            [
+                {
+                    "geometryType": 2,
+                    "position":
+                    {
+                        "isEmpty": false,
+                        "x": 1607,
+                        "y": 764
+                    },
+                    "size":
+                    {
+                        "isEmpty": false,
+                        "width": 298,
+                        "height": 298
+                    },
+                    "fillColor":
+                    {
+                        "r": 255,
+                        "g": 0,
+                        "b": 0,
+                        "a": 50                        
+                    },
+                    "borderColor":
+                    {
+                        "r": 255,
+                        "g": 255,
+                        "b": 0,
+                        "a": 255                        
+                    },
+                    "borderWidth": 2
+                }
+            ]
+        },
+        "1080 BottomLeft":
+        {
+            "name": "1080 BottomLeft",
+            "obsDeviceName": "SYS CamCircle",
+            "geometries":
+            [
+                {
+                    "geometryType": 2,
+                    "position":
+                    {
+                        "isEmpty": false,
+                        "x": 20,
+                        "y": 764
+                    },
+                    "size":
+                    {
+                        "isEmpty": false,
+                        "width": 298,
+                        "height": 298
+                    },
+                    "fillColor":
+                    {
+                        "r":255,"g":0,"b":0,"a":50                    
+                    },
+                    "borderColor":
+                    {
+                        "r": 255,
+                        "g": 255,
+                        "b": 0,
+                        "a": 255                        
+                    },
+                    "borderWidth": 2
+                }                
+            ]
+        },
+        "1080 RightBig":
+        {
+            "name": "1080 RightBig",
+            "obsDeviceName": "SYS CamPortrait",
+            "geometries":
+            [
+                {
+                    "geometryType": 1,
+                    "position":
+                    {
+                        "isEmpty": false,
+                        "x": 0,
+                        "y": 0
+                    },
+                    "size":
+                    {
+                        "isEmpty": false,
+                        "width": 360,
+                        "height": 1080
+                    },
+                    "fillColor":
+                    {
+                        "r":255,"g":0,"b":0,"a":20                 
+                    },
+                    "borderColor": null,
+                    "borderWidth": 0
+                },
+                {
+                    "geometryType": 1,
+                    "position":
+                    {
+                        "isEmpty": false,
+                        "x": 1561,
+                        "y": 0
+                    },
+                    "size":
+                    {
+                        "isEmpty": false,
+                        "width": 300,
+                        "height": 1080
+                    },
+                    "fillColor":
+                    {
+                        "r":255,"g":0,"b":0,"a":20                    
+                    },
+                    "borderColor": null,
+                    "borderWidth": 0
+                }                  
+            ]
+        },
+        "FaceOnly":
+        {
+            "name": "FaceOnly",
+            "obsDeviceName": "Camera",
+            "geometries":
+            [
+                {
+                    "geometryType": 1,
+                    "position":
+                    {
+                        "isEmpty": false,
+                        "x": 0,
+                        "y": 0
+                    },
+                    "size":
+                    {
+                        "isEmpty": false,
+                        "width": 1920,
+                        "height": 1080
+                    },
+                    "fillColor":
+                    {
+                        "r":255,"g":0,"b":0,"a":20                    
+                    },
+                    "borderColor": null,
+                    "borderWidth": 0
+                }
+            ]
+        }
+    }
+}
