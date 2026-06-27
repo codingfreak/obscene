@@ -56,6 +56,10 @@ namespace codingfreaks.obscene.Logic.WinApi
 
         public const int WS_POPUP = unchecked((int)0x80000000);
 
+        public const int WM_NCLBUTTONDOWN = 0x00A1;
+
+        public const int HTCLOSE = 20;
+
         public static readonly Delegates.WndProcDelegate s_wndProc = WinApiHelper.WndProc;
 
         #endregion
