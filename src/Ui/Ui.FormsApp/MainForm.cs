@@ -13,6 +13,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly ConcurrentQueue<string> _sceneQueue = new();
+
+        private bool _formClosingCalled;
         private OBSWebsocket? _obs;
         private Task? _queueWatcher;
         private Settings? _settings;
@@ -53,6 +55,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _formClosingCalled = true;
             _cancellationTokenSource.Cancel();
             _obs?.Disconnect();
         }
@@ -73,12 +76,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
                         {
                             if (!_settings.Scenes.ContainsKey(sceneName))
                             {
-                                StatusBarLabel.Text = $"Unknown scene {sceneName} selected in OBS.";
+                                WriteStatusLabel($"Unknown scene {sceneName} selected in OBS.");
                                 logic.Clear();
                                 continue;
                             }
                             logic.Draw(sceneName);
-                            StatusBarLabel.Text = $"obscene switched to scene {sceneName}.";
+                            WriteStatusLabel($"obscene switched to scene {sceneName}.");
                         }
                         try
                         {
@@ -102,26 +105,63 @@ namespace codingfreaks.obscene.Ui.FormsApp
                     throw new InvalidOperationException("Strange things happened.");
                 }
                 var sceneName = senderObs.GetCurrentProgramScene();
+                CurrentSceneBarLabel.Text = sceneName;
                 _sceneQueue.Enqueue(sceneName);
-                StatusBarLabel.Text = "Connected to OBS.";
+                WriteStatusLabel("Connected to OBS.");
             };
             _obs.Disconnected += (_, _) =>
             {
-                StatusBarLabel.Text = "Disconnected from OBS.";
+                WriteStatusLabel("Disconnected from OBS.");
             };
             _obs.CurrentProgramSceneChanged += (_, args) =>
             {
-                StatusBarLabel.Text = $"OBS switched to scene {args.SceneName}";
+                CurrentSceneBarLabel.Text = args.SceneName;
+                WriteStatusLabel("OBS switched to scene.");
                 _sceneQueue.Enqueue(args.SceneName);
             };
-            StatusBarLabel.Text = "Connecting to OBS...";
-            _obs.ConnectAsync("ws://localhost:4455", Environment.GetEnvironmentVariable("Obs:Password") ?? Environment.GetEnvironmentVariable("OBS_PASSWORD"));
+            await WriteStatusLabelAsync("Connecting to OBS...");
+            _obs.ConnectAsync(
+                "ws://localhost:4455",
+                Environment.GetEnvironmentVariable("Obs:Password")
+                ?? Environment.GetEnvironmentVariable("OBS_PASSWORD"));
         }
 
         private void OpenObsceneContextCommand_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = true;
+        }
+
+        private void WriteStatusLabel(string labelText, int durationInSeconds = 2)
+        {
+            if (_formClosingCalled)
+            {
+                return;
+            }
+            Invoke(() =>
+            {
+                StatusBarLabel.Text = labelText;
+                if (durationInSeconds > 0)
+                {
+                    Task.Delay(TimeSpan.FromSeconds(durationInSeconds))
+                        .ContinueWith(_ =>
+                        {
+                            Invoke(() => StatusBarLabel.Text = "Ready");
+                        });
+                }
+            });
+        }
+
+        private async Task WriteStatusLabelAsync(string labelText)
+        {
+            if (_formClosingCalled)
+            {
+                return;
+            }
+            await InvokeAsync(() =>
+            {
+                StatusBarLabel.Text = labelText;
+            });
         }
 
         #endregion

@@ -38,6 +38,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ExitObsenceContextCommand = new ToolStripMenuItem();
             StatusBar = new StatusStrip();
             StatusBarLabel = new ToolStripStatusLabel();
+            CurrentSceneBarLabel = new ToolStripStatusLabel();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
             SuspendLayout();
@@ -89,7 +90,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // StatusBar
             // 
-            StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel });
+            StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel, CurrentSceneBarLabel });
             StatusBar.Location = new Point(0, 539);
             StatusBar.Name = "StatusBar";
             StatusBar.Size = new Size(484, 22);
@@ -98,10 +99,17 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // StatusBarLabel
             // 
+            StatusBarLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
             StatusBarLabel.Name = "StatusBarLabel";
-            StatusBarLabel.Size = new Size(469, 17);
+            StatusBarLabel.Size = new Size(434, 17);
             StatusBarLabel.Spring = true;
             StatusBarLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // CurrentSceneBarLabel
+            // 
+            CurrentSceneBarLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
+            CurrentSceneBarLabel.Name = "CurrentSceneBarLabel";
+            CurrentSceneBarLabel.Size = new Size(4, 17);
             // 
             // MainForm
             // 
@@ -134,5 +142,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ToolStripMenuItem ExitObsenceContextCommand;
         private StatusStrip StatusBar;
         private ToolStripStatusLabel StatusBarLabel;
+        private ToolStripStatusLabel CurrentSceneBarLabel;
     }
 }
