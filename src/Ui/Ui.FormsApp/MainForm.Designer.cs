@@ -115,6 +115,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             MinimumSize = new Size(500, 600);
             Name = "MainForm";
             Text = "obscene";
+            FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             TrayContextMenu.ResumeLayout(false);
             StatusBar.ResumeLayout(false);

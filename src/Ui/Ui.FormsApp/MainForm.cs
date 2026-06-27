@@ -1,14 +1,24 @@
 namespace codingfreaks.obscene.Ui.FormsApp
 {
+    using System.Collections.Concurrent;
+
     using Logic.Core;
     using Logic.WinApi;
-
-    using System.Collections.Concurrent;
 
     using OBSWebsocketDotNet;
 
     public partial class MainForm : Form
     {
+        #region member vars
+
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
+        private readonly ConcurrentQueue<string> _sceneQueue = new();
+        private OBSWebsocket? _obs;
+        private Task? _queueWatcher;
+        private Settings? _settings;
+
+        #endregion
+
         #region constructors and destructors
 
         public MainForm()
@@ -41,52 +51,50 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Close();
         }
 
-        private void OpenObsceneContextCommand_Click(object sender, EventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
+            _cancellationTokenSource.Cancel();
+            _obs?.Disconnect();
         }
-
-        #endregion
-
-        private Settings? _settings;
-        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private ConcurrentQueue<string> _sceneQueue = new ConcurrentQueue<string>();
-        private Task? _queueWatcher;
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
             var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configs", "my.json");
-            _settings = await Settings.LoadAsync(settingsPath).ConfigureAwait(false);
+            _settings = await Settings.LoadAsync(settingsPath)
+                .ConfigureAwait(false);
             var token = _cancellationTokenSource.Token;
-            _queueWatcher = Task.Run(() =>
-            {
-                var logic = new SceneLogic(_settings);
-                while (!token.IsCancellationRequested)
+            _queueWatcher = Task.Run(
+                () =>
                 {
-                    if (_sceneQueue.TryDequeue(out var sceneName))
+                    var logic = new SceneLogic(_settings);
+                    while (!token.IsCancellationRequested)
                     {
-                        if (!_settings.Scenes.ContainsKey(sceneName))
+                        if (_sceneQueue.TryDequeue(out var sceneName))
                         {
-                            StatusBarLabel.Text = $"Unknown scene {sceneName} selected in OBS.";
-                            logic.Clear();
-                            continue;
+                            if (!_settings.Scenes.ContainsKey(sceneName))
+                            {
+                                StatusBarLabel.Text = $"Unknown scene {sceneName} selected in OBS.";
+                                logic.Clear();
+                                continue;
+                            }
+                            logic.Draw(sceneName);
+                            StatusBarLabel.Text = $"obscene switched to scene {sceneName}.";
                         }
-                        logic.Draw(sceneName);
-                        StatusBarLabel.Text = $"obscene switched to scene {sceneName}.";
+                        try
+                        {
+                            Task.Delay(20, token)
+                                .GetAwaiter()
+                                .GetResult();
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            break;
+                        }
                     }
-                    try
-                    {
-                        Task.Delay(20, token).GetAwaiter().GetResult();
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        break;
-                    }
-                }
-            }, token);
-            var obs = new OBSWebsocket();
-            obs.Connected += (sender, _) =>
+                },
+                token);
+            _obs = new OBSWebsocket();
+            _obs.Connected += (sender, _) =>
             {
                 var senderObs = sender as OBSWebsocket;
                 if (senderObs == null)
@@ -97,17 +105,25 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 _sceneQueue.Enqueue(sceneName);
                 StatusBarLabel.Text = "Connected to OBS.";
             };
-            obs.Disconnected += (_, _) =>
+            _obs.Disconnected += (_, _) =>
             {
                 StatusBarLabel.Text = "Disconnected from OBS.";
             };
-            obs.CurrentProgramSceneChanged += (_, args) =>
+            _obs.CurrentProgramSceneChanged += (_, args) =>
             {
                 StatusBarLabel.Text = $"OBS switched to scene {args.SceneName}";
                 _sceneQueue.Enqueue(args.SceneName);
             };
             StatusBarLabel.Text = "Connecting to OBS...";
-            obs.ConnectAsync("ws://localhost:4455", Environment.GetEnvironmentVariable("Obs:Password"));
+            _obs.ConnectAsync("ws://localhost:4455", Environment.GetEnvironmentVariable("Obs:Password") ?? Environment.GetEnvironmentVariable("OBS_PASSWORD"));
         }
+
+        private void OpenObsceneContextCommand_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+        }
+
+        #endregion
     }
 }
