@@ -5,8 +5,18 @@
         <TargetFramework>net10.0-windows</TargetFramework>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>d700d67e-7ecb-4697-895c-ded98e79cdef</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\Logic\Logic.WinApi\Logic.WinApi.csproj" />
+        <Content Include="configs\my.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Logic\Logic.Core\Logic.Core.csproj" />
+        <ProjectReference Include="..\..\Logic\Logic.WinApi\Logic.WinApi.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="obs-websocket-dotnet" />
     </ItemGroup>
 </Project>

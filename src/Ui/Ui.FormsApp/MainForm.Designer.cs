@@ -36,7 +36,10 @@ namespace codingfreaks.obscene.Ui.FormsApp
             OpenObsceneContextCommand = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             ExitObsenceContextCommand = new ToolStripMenuItem();
+            StatusBar = new StatusStrip();
+            StatusBarLabel = new ToolStripStatusLabel();
             TrayContextMenu.SuspendLayout();
+            StatusBar.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
@@ -84,20 +87,40 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ExitObsenceContextCommand.Text = "E&xit";
             ExitObsenceContextCommand.Click += ExitObsenceContextCommand_Click;
             // 
+            // StatusBar
+            // 
+            StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel });
+            StatusBar.Location = new Point(0, 539);
+            StatusBar.Name = "StatusBar";
+            StatusBar.Size = new Size(484, 22);
+            StatusBar.TabIndex = 1;
+            StatusBar.Text = "statusStrip1";
+            // 
+            // StatusBarLabel
+            // 
+            StatusBarLabel.Name = "StatusBarLabel";
+            StatusBarLabel.Size = new Size(469, 17);
+            StatusBarLabel.Spring = true;
+            StatusBarLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(484, 561);
+            Controls.Add(StatusBar);
             Controls.Add(groupBox1);
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new Size(500, 600);
             Name = "MainForm";
             Text = "obscene";
-            TopMost = true;
+            Load += MainForm_Load;
             TrayContextMenu.ResumeLayout(false);
+            StatusBar.ResumeLayout(false);
+            StatusBar.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -108,5 +131,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ToolStripMenuItem OpenObsceneContextCommand;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem ExitObsenceContextCommand;
+        private StatusStrip StatusBar;
+        private ToolStripStatusLabel StatusBarLabel;
     }
 }
