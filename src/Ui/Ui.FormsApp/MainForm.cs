@@ -1,7 +1,5 @@
 namespace codingfreaks.obscene.Ui.FormsApp
 {
-    using System.Collections.Concurrent;
-
     using Logic.Core;
     using Logic.WinApi;
 
@@ -9,18 +7,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
     public partial class MainForm : Form
     {
-        #region member vars
-
-        private readonly CancellationTokenSource _cancellationTokenSource = new();
-        private readonly ConcurrentQueue<string> _sceneQueue = new();
-
-        private bool _formClosingCalled;
-        private OBSWebsocket? _obs;
-        private Task? _queueWatcher;
-        private Settings? _settings;
-
-        #endregion
-
         #region constructors and destructors
 
         public MainForm()
@@ -105,7 +91,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
                     throw new InvalidOperationException("Strange things happened.");
                 }
                 var sceneName = senderObs.GetCurrentProgramScene();
-                CurrentSceneBarLabel.Text = sceneName;
+                WriteCurrentSceneName(sceneName);
                 _sceneQueue.Enqueue(sceneName);
                 WriteStatusLabel("Connected to OBS.");
             };
@@ -115,7 +101,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             };
             _obs.CurrentProgramSceneChanged += (_, args) =>
             {
-                CurrentSceneBarLabel.Text = args.SceneName;
+                WriteCurrentSceneName(args.SceneName);
                 WriteStatusLabel("OBS switched to scene.");
                 _sceneQueue.Enqueue(args.SceneName);
             };
@@ -124,44 +110,39 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 "ws://localhost:4455",
                 Environment.GetEnvironmentVariable("Obs:Password")
                 ?? Environment.GetEnvironmentVariable("OBS_PASSWORD"));
+            await FillObsScenesAsync();
+        }
+
+        private void ObsProfileSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ObsSceneListView.Enabled = ObsProfileSelect.SelectedItem != null;
+            ObsSceneListView.Items.Clear();
+            if (_obsSettings == null)
+            {
+                // This should never happen :-)
+                return;
+            }
+            var selectedProfile = ObsProfileSelect.SelectedItem?.ToString()!;
+            var currentSettings = _obsSettings[selectedProfile];
+            foreach (var scene in currentSettings.Scenes.Where(s => s.Id == "scene"))
+            {
+                var item = new ListViewItem
+                {
+                    Tag = scene.Id,
+                    Text = scene.Name
+                };
+                item.SubItems.Add(scene.Uuid);
+                ObsSceneListView.Items.Add(item);
+            }
+            ObsSceneListSummaryLabel.Text =
+                $"{ObsSceneListView.Items.Count} scenes loaded from OBS profile '{selectedProfile}'.";
+            HighlightCurrentScene();
         }
 
         private void OpenObsceneContextCommand_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = true;
-        }
-
-        private void WriteStatusLabel(string labelText, int durationInSeconds = 2)
-        {
-            if (_formClosingCalled)
-            {
-                return;
-            }
-            Invoke(() =>
-            {
-                StatusBarLabel.Text = labelText;
-                if (durationInSeconds > 0)
-                {
-                    Task.Delay(TimeSpan.FromSeconds(durationInSeconds))
-                        .ContinueWith(_ =>
-                        {
-                            Invoke(() => StatusBarLabel.Text = "Ready");
-                        });
-                }
-            });
-        }
-
-        private async Task WriteStatusLabelAsync(string labelText)
-        {
-            if (_formClosingCalled)
-            {
-                return;
-            }
-            await InvokeAsync(() =>
-            {
-                StatusBarLabel.Text = labelText;
-            });
         }
 
         #endregion

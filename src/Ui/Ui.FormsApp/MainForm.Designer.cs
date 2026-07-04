@@ -31,6 +31,11 @@ namespace codingfreaks.obscene.Ui.FormsApp
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
+            ObsProfileSelect = new ComboBox();
+            label1 = new Label();
+            ObsSceneListView = new ListView();
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
             TrayIcon = new NotifyIcon(components);
             TrayContextMenu = new ContextMenuStrip(components);
             OpenObsceneContextCommand = new ToolStripMenuItem();
@@ -39,6 +44,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             StatusBar = new StatusStrip();
             StatusBarLabel = new ToolStripStatusLabel();
             CurrentSceneBarLabel = new ToolStripStatusLabel();
+            ObsSceneListSummaryLabel = new Label();
+            groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
             SuspendLayout();
@@ -46,12 +53,59 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // groupBox1
             // 
             groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.Controls.Add(ObsSceneListSummaryLabel);
+            groupBox1.Controls.Add(ObsProfileSelect);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(ObsSceneListView);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(460, 181);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "groupBox1";
+            // 
+            // ObsProfileSelect
+            // 
+            ObsProfileSelect.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            ObsProfileSelect.DropDownStyle = ComboBoxStyle.DropDownList;
+            ObsProfileSelect.FormattingEnabled = true;
+            ObsProfileSelect.Location = new Point(56, 16);
+            ObsProfileSelect.Name = "ObsProfileSelect";
+            ObsProfileSelect.Size = new Size(398, 23);
+            ObsProfileSelect.TabIndex = 2;
+            ObsProfileSelect.SelectedIndexChanged += ObsProfileSelect_SelectedIndexChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(6, 19);
+            label1.Name = "label1";
+            label1.Size = new Size(44, 15);
+            label1.TabIndex = 1;
+            label1.Text = "Profile:";
+            // 
+            // ObsSceneListView
+            // 
+            ObsSceneListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            ObsSceneListView.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2 });
+            ObsSceneListView.Enabled = false;
+            ObsSceneListView.FullRowSelect = true;
+            ObsSceneListView.Location = new Point(6, 45);
+            ObsSceneListView.Name = "ObsSceneListView";
+            ObsSceneListView.Size = new Size(448, 110);
+            ObsSceneListView.TabIndex = 0;
+            ObsSceneListView.UseCompatibleStateImageBehavior = false;
+            ObsSceneListView.View = View.Details;
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Text = "Scene name";
+            columnHeader1.Width = 200;
+            // 
+            // columnHeader2
+            // 
+            columnHeader2.Text = "Scene Id";
+            columnHeader2.Width = 200;
             // 
             // TrayIcon
             // 
@@ -101,15 +155,26 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             StatusBarLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
             StatusBarLabel.Name = "StatusBarLabel";
-            StatusBarLabel.Size = new Size(434, 17);
+            StatusBarLabel.Size = new Size(465, 17);
             StatusBarLabel.Spring = true;
             StatusBarLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // CurrentSceneBarLabel
             // 
+            CurrentSceneBarLabel.AutoToolTip = true;
             CurrentSceneBarLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
             CurrentSceneBarLabel.Name = "CurrentSceneBarLabel";
             CurrentSceneBarLabel.Size = new Size(4, 17);
+            CurrentSceneBarLabel.ToolTipText = "Current selected OBS scene";
+            // 
+            // ObsSceneListSummaryLabel
+            // 
+            ObsSceneListSummaryLabel.AutoSize = true;
+            ObsSceneListSummaryLabel.Location = new Point(6, 158);
+            ObsSceneListSummaryLabel.Name = "ObsSceneListSummaryLabel";
+            ObsSceneListSummaryLabel.Size = new Size(38, 15);
+            ObsSceneListSummaryLabel.TabIndex = 3;
+            ObsSceneListSummaryLabel.Text = "label2";
             // 
             // MainForm
             // 
@@ -125,6 +190,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Text = "obscene";
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             TrayContextMenu.ResumeLayout(false);
             StatusBar.ResumeLayout(false);
             StatusBar.PerformLayout();
@@ -143,5 +210,11 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private StatusStrip StatusBar;
         private ToolStripStatusLabel StatusBarLabel;
         private ToolStripStatusLabel CurrentSceneBarLabel;
+        private ListView ObsSceneListView;
+        private ColumnHeader columnHeader1;
+        private ComboBox ObsProfileSelect;
+        private Label label1;
+        private ColumnHeader columnHeader2;
+        private Label ObsSceneListSummaryLabel;
     }
 }
