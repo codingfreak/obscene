@@ -13,6 +13,7 @@
     <Project Path="src/Logic/Logic.WinApi/Logic.WinApi.csproj" />
   </Folder>
   <Folder Name="/Ui/">
+    <Project Path="src/Ui/Ui.FormsApp/Ui.FormsApp.csproj" Id="8c4ed221-d625-43f7-a633-c50ced5b16ca" />
     <Project Path="src/Ui/Ui.TestConsole/Ui.TestConsole.csproj" Id="c873ef68-63fd-425f-855d-1ddf29932f35" />
   </Folder>
 </Solution>
