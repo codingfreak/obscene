@@ -8,32 +8,29 @@
             "geometries":
             [
                 {
+                    "id": "1",
                     "geometryType": 2,
-                    "position":
-                    {
+                    "position": {
                         "isEmpty": false,
                         "x": 1607,
                         "y": 764
                     },
-                    "size":
-                    {
+                    "size": {
                         "isEmpty": false,
                         "width": 298,
                         "height": 298
                     },
-                    "fillColor":
-                    {
+                    "fillColor": {
                         "r": 255,
                         "g": 0,
                         "b": 0,
-                        "a": 50                        
+                        "a": 50
                     },
-                    "borderColor":
-                    {
+                    "borderColor": {
                         "r": 255,
                         "g": 255,
                         "b": 0,
-                        "a": 255                        
+                        "a": 255
                     },
                     "borderWidth": 2
                 }
@@ -46,29 +43,29 @@
             "geometries":
             [
                 {
+                    "id": "2",
                     "geometryType": 2,
-                    "position":
-                    {
+                    "position": {
                         "isEmpty": false,
                         "x": 20,
                         "y": 764
                     },
-                    "size":
-                    {
+                    "size": {
                         "isEmpty": false,
                         "width": 298,
                         "height": 298
                     },
-                    "fillColor":
-                    {
-                        "r":255,"g":0,"b":0,"a":50                    
+                    "fillColor": {
+                        "r": 255,
+                        "g": 0,
+                        "b": 0,
+                        "a": 50
                     },
-                    "borderColor":
-                    {
+                    "borderColor": {
                         "r": 255,
                         "g": 255,
                         "b": 0,
-                        "a": 255                        
+                        "a": 255
                     },
                     "borderWidth": 2
                 }                
@@ -81,45 +78,57 @@
             "geometries":
             [
                 {
+                    "id": "3",
                     "geometryType": 1,
-                    "position":
-                    {
+                    "position": {
                         "isEmpty": false,
                         "x": 0,
                         "y": 0
                     },
-                    "size":
-                    {
+                    "size": {
                         "isEmpty": false,
                         "width": 360,
                         "height": 1080
                     },
-                    "fillColor":
-                    {
-                        "r":255,"g":0,"b":0,"a":20                 
+                    "fillColor": {
+                        "r": 255,
+                        "g": 0,
+                        "b": 0,
+                        "a": 20
                     },
-                    "borderColor": null,
+                    "borderColor": {
+                        "r": 255,
+                        "g": 255,
+                        "b": 0,
+                        "a": 255
+                    },
                     "borderWidth": 0
                 },
                 {
+                    "id": "4",
                     "geometryType": 1,
-                    "position":
-                    {
+                    "position": {
                         "isEmpty": false,
                         "x": 1561,
                         "y": 0
                     },
-                    "size":
-                    {
+                    "size": {
                         "isEmpty": false,
                         "width": 300,
                         "height": 1080
                     },
-                    "fillColor":
-                    {
-                        "r":255,"g":0,"b":0,"a":20                    
+                    "fillColor": {
+                        "r": 255,
+                        "g": 0,
+                        "b": 0,
+                        "a": 20
                     },
-                    "borderColor": null,
+                    "borderColor": {
+                        "r": 255,
+                        "g": 255,
+                        "b": 0,
+                        "a": 255
+                    },
                     "borderWidth": 0
                 }                  
             ]
@@ -131,24 +140,30 @@
             "geometries":
             [
                 {
+                    "id": "5",
                     "geometryType": 1,
-                    "position":
-                    {
+                    "position": {
                         "isEmpty": false,
                         "x": 0,
                         "y": 0
                     },
-                    "size":
-                    {
+                    "size": {
                         "isEmpty": false,
                         "width": 1920,
                         "height": 1080
                     },
-                    "fillColor":
-                    {
-                        "r":255,"g":0,"b":0,"a":20                    
+                    "fillColor": {
+                        "r": 255,
+                        "g": 0,
+                        "b": 0,
+                        "a": 20
                     },
-                    "borderColor": null,
+                    "borderColor": {
+                        "r": 255,
+                        "g": 255,
+                        "b": 0,
+                        "a": 255
+                    },
                     "borderWidth": 0
                 }
             ]

@@ -23,6 +23,7 @@ namespace codingfreaks.obscene.Logic.Core.Geometries
         {
             return new Circle
             {
+                Id = Id,
                 Position = new Point
                 {
                     X = Position.X,

@@ -79,6 +79,12 @@ namespace codingfreaks.obscene.Logic.Core.BaseTypes
         /// <inheritdoc />
         public abstract GeometryType GeometryType { get; }
 
+        /// <summary>
+        /// Unique id of the geometry.
+        /// </summary>
+        public string Id { get; set; } = Guid.NewGuid()
+            .ToString();
+
         /// <inheritdoc />
         public Point Position
         {

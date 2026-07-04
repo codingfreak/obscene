@@ -58,6 +58,21 @@ namespace codingfreaks.obscene.Logic.Core
             }
         }
 
+        /// <summary>
+        /// Refreshes all geometries of the current scene.
+        /// </summary>
+        //public void Refresh()
+        //{
+        //    if (CurrentScene == null)
+        //    {
+        //        throw new InvalidOperationException("No current scene selected.");
+        //    }
+        //    foreach (var geo in CurrentScene.Geometries)
+        //    {
+        //        geo.Refresh();
+        //    }
+        //}
+
         #endregion
 
         #region properties
@@ -75,6 +90,27 @@ namespace codingfreaks.obscene.Logic.Core
         /// </summary>
         public Settings Settings { get; }
 
+        /// <summary>
+        /// Refreshes all geometries of the current scene.
+        /// </summary>
+        /// <param name="scene"></param>
+        public void RefreshCurrentScene(Scene scene)
+        {
+            if (CurrentScene == null)
+            {
+                return;
+            }
+            foreach (var geo in CurrentScene.Geometries)
+            {
+                var match = scene.Geometries.First(g => g.Id == geo.Id);
+                geo.BorderColor = match.BorderColor;
+                geo.BorderWidth = match.BorderWidth;
+                geo.FillColor = match.FillColor;
+                geo.Position = match.Position;
+                geo.Size = match.Size;
+                geo.Refresh();
+            }
+
         #endregion
     }
-}
+}}

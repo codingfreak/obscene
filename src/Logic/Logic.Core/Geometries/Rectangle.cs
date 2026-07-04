@@ -20,6 +20,7 @@ namespace codingfreaks.obscene.Logic.Core.Geometries
         {
             return new Rectangle
             {
+                Id = Id,
                 Position = new Point
                 {
                     X = Position.X,

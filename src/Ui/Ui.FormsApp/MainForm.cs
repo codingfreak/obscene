@@ -24,7 +24,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private Dictionary<string, ObsSceneSettings>? _obsSettings;
         private Task? _queueWatcher;
 
-        private SceneLogic? _sceneLogic;
         private Settings? _settings;
 
         #endregion
@@ -170,7 +169,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
             {
                 return;
             }
-            _sceneLogic?.Draw(CurrentSceneBarLabel.Text);
+            if (_settings == null)
+            {
+                return;
+            }
+            var x = _settings.Scenes[CurrentSceneBarLabel.Text];
+            _sceneQueue.Enqueue(CurrentSceneBarLabel.Text);
         }
 
         private void HighlightCurrentScene()
@@ -201,7 +205,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _queueWatcher = Task.Run(
                 () =>
                 {
-                    _sceneLogic = new SceneLogic(_settings);
+                    var sceneLogic = new SceneLogic(_settings);
                     while (!token.IsCancellationRequested)
                     {
                         if (_sceneQueue.TryDequeue(out var sceneName))
@@ -209,11 +213,19 @@ namespace codingfreaks.obscene.Ui.FormsApp
                             if (!_settings.Scenes.ContainsKey(sceneName))
                             {
                                 WriteStatusLabel($"Unknown scene {sceneName} selected in OBS.");
-                                _sceneLogic.Clear();
+                                sceneLogic.Clear();
                                 continue;
                             }
-                            _sceneLogic.Draw(sceneName);
-                            WriteStatusLabel($"obscene switched to scene {sceneName}.");
+                            if (sceneLogic.CurrentScene != null && sceneLogic.CurrentScene.Name == sceneName)
+                            {
+                                sceneLogic.RefreshCurrentScene(_settings.Scenes[sceneLogic.CurrentScene.Name]);
+                                WriteStatusLabel($"Scene {sceneName} was refreshed.");
+                            }
+                            else
+                            {
+                                sceneLogic.Draw(sceneName);
+                                WriteStatusLabel($"obscene switched to scene {sceneName}.");
+                            }
                         }
                         try
                         {

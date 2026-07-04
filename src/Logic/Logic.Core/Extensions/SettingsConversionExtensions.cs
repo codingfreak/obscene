@@ -63,6 +63,7 @@ namespace codingfreaks.obscene.Logic.Core.Extensions
             {
                 throw new ArgumentException("The geometry type could not be resolved.", nameof(original));
             }
+            result.Id = original.Id;
             result.Position = original.Position;
             result.BorderColor = original.BorderColor?.ToColor();
             result.BorderWidth = original.BorderWidth;
@@ -78,6 +79,7 @@ namespace codingfreaks.obscene.Logic.Core.Extensions
         {
             return new GeometryData
             {
+                Id = original.Id,
                 GeometryType = original.GeometryType,
                 Position = original.Position,
                 BorderColor = original.BorderColor?.ToColorData(),
