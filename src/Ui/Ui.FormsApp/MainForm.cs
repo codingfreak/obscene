@@ -7,6 +7,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
     using Logic.Obs.Models;
     using Logic.WinApi;
 
+    using Models;
+
     using OBSWebsocketDotNet;
 
     public partial class MainForm : Form
@@ -57,6 +59,20 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Close();
         }
 
+        private void FillConfigScenes()
+        {
+            if (_settings == null)
+            {
+                return;
+            }
+            Invoke(() =>
+            {
+                ConfigSceneList.Items.Clear();
+                var keys = _settings.Scenes.Select(s => s.Key.ToString()).Cast<object>().ToArray();
+                ConfigSceneList.Items.AddRange(keys);
+            });
+        }
+
         /// <summary>
         /// TODO
         /// </summary>
@@ -94,6 +110,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             });
         }
 
+        private SceneLogic? _sceneLogic;
+
         private async Task InitObsAsync()
         {
             if (_settings == null)
@@ -104,7 +122,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _queueWatcher = Task.Run(
                 () =>
                 {
-                    var logic = new SceneLogic(_settings);
+                    _sceneLogic = new SceneLogic(_settings);
                     while (!token.IsCancellationRequested)
                     {
                         if (_sceneQueue.TryDequeue(out var sceneName))
@@ -112,10 +130,10 @@ namespace codingfreaks.obscene.Ui.FormsApp
                             if (!_settings.Scenes.ContainsKey(sceneName))
                             {
                                 WriteStatusLabel($"Unknown scene {sceneName} selected in OBS.");
-                                logic.Clear();
+                                _sceneLogic.Clear();
                                 continue;
                             }
-                            logic.Draw(sceneName);
+                            _sceneLogic.Draw(sceneName);
                             WriteStatusLabel($"obscene switched to scene {sceneName}.");
                         }
                         try
@@ -166,6 +184,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configs", "my.json");
             _settings = await Settings.LoadAsync(settingsPath)
                 .ConfigureAwait(false);
+            FillConfigScenes();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -256,5 +275,44 @@ namespace codingfreaks.obscene.Ui.FormsApp
         }
 
         #endregion
+
+        private void ConfigSceneList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            GeometryProperties.SelectedObject = null;
+            ConfigGeometriesList.Items.Clear();
+            if (_settings == null)
+            {
+                return;
+            }
+            var currentConfigKey = ConfigSceneList.SelectedItem?.ToString();
+            if (!_settings.Scenes.ContainsKey(currentConfigKey ?? string.Empty))
+            {
+                return;
+            }
+            var currentConfigScene = _settings.Scenes[currentConfigKey!];
+            var converted = currentConfigScene.Geometries.Select(g => new GeometryListItem
+            {
+                Label = g.GeometryType.ToString(),
+                Data = g
+            });
+            foreach (var geometry in converted)
+            {
+                ConfigGeometriesList.Items.Add(geometry);
+            }
+        }
+
+        private void ConfigGeometriesList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            GeometryProperties.SelectedObject = (ConfigGeometriesList.SelectedItem as GeometryListItem)?.Data;
+        }
+
+        private void GeometryProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(CurrentSceneBarLabel.Text))
+            {
+                return;
+            }
+            _sceneLogic?.Draw(CurrentSceneBarLabel.Text);
+        }
     }
 }
