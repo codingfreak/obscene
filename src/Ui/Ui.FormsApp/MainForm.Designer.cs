@@ -31,6 +31,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
+            ObsSceneListSummaryLabel = new Label();
             ObsProfileSelect = new ComboBox();
             label1 = new Label();
             ObsSceneListView = new ListView();
@@ -44,10 +45,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
             StatusBar = new StatusStrip();
             StatusBarLabel = new ToolStripStatusLabel();
             CurrentSceneBarLabel = new ToolStripStatusLabel();
-            ObsSceneListSummaryLabel = new Label();
+            groupBox2 = new GroupBox();
+            ConfigSceneList = new ListBox();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
+            groupBox2.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
@@ -62,7 +65,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
             groupBox1.Size = new Size(460, 181);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
-            groupBox1.Text = "groupBox1";
+            groupBox1.Text = "OBS Info";
+            // 
+            // ObsSceneListSummaryLabel
+            // 
+            ObsSceneListSummaryLabel.AutoSize = true;
+            ObsSceneListSummaryLabel.Location = new Point(6, 158);
+            ObsSceneListSummaryLabel.Name = "ObsSceneListSummaryLabel";
+            ObsSceneListSummaryLabel.Size = new Size(10, 15);
+            ObsSceneListSummaryLabel.TabIndex = 3;
+            ObsSceneListSummaryLabel.Text = ".";
             // 
             // ObsProfileSelect
             // 
@@ -167,20 +179,32 @@ namespace codingfreaks.obscene.Ui.FormsApp
             CurrentSceneBarLabel.Size = new Size(4, 17);
             CurrentSceneBarLabel.ToolTipText = "Current selected OBS scene";
             // 
-            // ObsSceneListSummaryLabel
+            // groupBox2
             // 
-            ObsSceneListSummaryLabel.AutoSize = true;
-            ObsSceneListSummaryLabel.Location = new Point(6, 158);
-            ObsSceneListSummaryLabel.Name = "ObsSceneListSummaryLabel";
-            ObsSceneListSummaryLabel.Size = new Size(38, 15);
-            ObsSceneListSummaryLabel.TabIndex = 3;
-            ObsSceneListSummaryLabel.Text = "label2";
+            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox2.Controls.Add(ConfigSceneList);
+            groupBox2.Location = new Point(12, 199);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(460, 337);
+            groupBox2.TabIndex = 2;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Masks";
+            // 
+            // ConfigSceneList
+            // 
+            ConfigSceneList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            ConfigSceneList.FormattingEnabled = true;
+            ConfigSceneList.Location = new Point(6, 22);
+            ConfigSceneList.Name = "ConfigSceneList";
+            ConfigSceneList.Size = new Size(190, 274);
+            ConfigSceneList.TabIndex = 0;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(484, 561);
+            Controls.Add(groupBox2);
             Controls.Add(StatusBar);
             Controls.Add(groupBox1);
             MaximizeBox = false;
@@ -195,6 +219,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TrayContextMenu.ResumeLayout(false);
             StatusBar.ResumeLayout(false);
             StatusBar.PerformLayout();
+            groupBox2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -216,5 +241,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private Label label1;
         private ColumnHeader columnHeader2;
         private Label ObsSceneListSummaryLabel;
+        private GroupBox groupBox2;
+        private ListBox ConfigSceneList;
     }
 }
