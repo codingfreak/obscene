@@ -128,6 +128,11 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Close();
         }
 
+        private void ExitToolStripButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
         private void FillConfigScenes()
         {
             if (_settings == null)
@@ -323,6 +328,11 @@ namespace codingfreaks.obscene.Ui.FormsApp
         {
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = true;
+        }
+
+        private void TopMostToolStripCheck_CheckStateChanged(object sender, EventArgs e)
+        {
+            TopMost = TopMostToolStripCheck.Checked;
         }
 
         private void WriteCurrentSceneName(string sceneName)

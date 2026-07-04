@@ -34,4 +34,7 @@
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="icons\" />
+    </ItemGroup>
 </Project>
