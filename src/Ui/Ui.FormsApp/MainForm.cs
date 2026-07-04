@@ -23,6 +23,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private Dictionary<string, ObsSceneSettings>? _obsSettings;
         private Task? _queueWatcher;
+
+        private SceneLogic? _sceneLogic;
         private Settings? _settings;
 
         #endregion
@@ -54,6 +56,74 @@ namespace codingfreaks.obscene.Ui.FormsApp
             base.WndProc(ref m);
         }
 
+        private void CheckActiveColorModelToolstripItem()
+        {
+            var currentColorMode = Application.ColorMode.ToString()
+                .ToLowerInvariant();
+            foreach (ToolStripMenuItem item in ColorModeContextMenu.Items)
+            {
+                item.Checked = item.Tag?.ToString()
+                    ?.Equals(currentColorMode, StringComparison.OrdinalIgnoreCase) ?? false;
+            }
+        }
+
+        private void ColorModeItem_Click(object sender, EventArgs e)
+        {
+            // NOTE: We need to sync this with whatever is currently selected
+            var toolstrip = sender as ToolStripMenuItem;
+            if (toolstrip == null)
+            {
+                throw new InvalidOperationException("Unkown sender.");
+            }
+            var text = toolstrip.Name!;
+            if (text.Contains("dark", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Application.SetColorMode(SystemColorMode.Dark);
+            }
+            else
+            {
+                Application.SetColorMode(SystemColorMode.Classic);
+            }
+            // Put the form in invisible mode and bring it up again to try to refresh the colors
+            WindowState = FormWindowState.Minimized;
+            ShowInTaskbar = false;
+            // TODO This is not working relyable sadly
+            Refresh();
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = false;
+            CheckActiveColorModelToolstripItem();
+        }
+
+        private void ConfigGeometriesList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            GeometryProperties.SelectedObject = (ConfigGeometriesList.SelectedItem as GeometryListItem)?.Data;
+        }
+
+        private void ConfigSceneList_SelectedValueChanged(object sender, EventArgs e)
+        {
+            GeometryProperties.SelectedObject = null;
+            ConfigGeometriesList.Items.Clear();
+            if (_settings == null)
+            {
+                return;
+            }
+            var currentConfigKey = ConfigSceneList.SelectedItem?.ToString();
+            if (!_settings.Scenes.ContainsKey(currentConfigKey ?? string.Empty))
+            {
+                return;
+            }
+            var currentConfigScene = _settings.Scenes[currentConfigKey!];
+            var converted = currentConfigScene.Geometries.Select(g => new GeometryListItem
+            {
+                Label = g.GeometryType.ToString(),
+                Data = g
+            });
+            foreach (var geometry in converted)
+            {
+                ConfigGeometriesList.Items.Add(geometry);
+            }
+        }
+
         private void ExitObsenceContextCommand_Click(object sender, EventArgs e)
         {
             Close();
@@ -68,7 +138,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Invoke(() =>
             {
                 ConfigSceneList.Items.Clear();
-                var keys = _settings.Scenes.Select(s => s.Key.ToString()).Cast<object>().ToArray();
+                var keys = _settings.Scenes.Select(s => s.Key.ToString())
+                    .Cast<object>()
+                    .ToArray();
                 ConfigSceneList.Items.AddRange(keys);
             });
         }
@@ -92,6 +164,15 @@ namespace codingfreaks.obscene.Ui.FormsApp
             });
         }
 
+        private void GeometryProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(CurrentSceneBarLabel.Text))
+            {
+                return;
+            }
+            _sceneLogic?.Draw(CurrentSceneBarLabel.Text);
+        }
+
         private void HighlightCurrentScene()
         {
             Invoke(() =>
@@ -109,8 +190,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 }
             });
         }
-
-        private SceneLogic? _sceneLogic;
 
         private async Task InitObsAsync()
         {
@@ -199,6 +278,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             await LoadConfigAsync();
             await InitObsAsync();
             await FillObsScenesAsync();
+            CheckActiveColorModelToolstripItem();
         }
 
         private void ObsProfileSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -275,44 +355,5 @@ namespace codingfreaks.obscene.Ui.FormsApp
         }
 
         #endregion
-
-        private void ConfigSceneList_SelectedValueChanged(object sender, EventArgs e)
-        {
-            GeometryProperties.SelectedObject = null;
-            ConfigGeometriesList.Items.Clear();
-            if (_settings == null)
-            {
-                return;
-            }
-            var currentConfigKey = ConfigSceneList.SelectedItem?.ToString();
-            if (!_settings.Scenes.ContainsKey(currentConfigKey ?? string.Empty))
-            {
-                return;
-            }
-            var currentConfigScene = _settings.Scenes[currentConfigKey!];
-            var converted = currentConfigScene.Geometries.Select(g => new GeometryListItem
-            {
-                Label = g.GeometryType.ToString(),
-                Data = g
-            });
-            foreach (var geometry in converted)
-            {
-                ConfigGeometriesList.Items.Add(geometry);
-            }
-        }
-
-        private void ConfigGeometriesList_SelectedValueChanged(object sender, EventArgs e)
-        {
-            GeometryProperties.SelectedObject = (ConfigGeometriesList.SelectedItem as GeometryListItem)?.Data;
-        }
-
-        private void GeometryProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
-        {
-            if (string.IsNullOrEmpty(CurrentSceneBarLabel.Text))
-            {
-                return;
-            }
-            _sceneLogic?.Draw(CurrentSceneBarLabel.Text);
-        }
     }
 }

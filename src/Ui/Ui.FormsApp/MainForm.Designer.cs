@@ -45,13 +45,21 @@ namespace codingfreaks.obscene.Ui.FormsApp
             StatusBar = new StatusStrip();
             StatusBarLabel = new ToolStripStatusLabel();
             CurrentSceneBarLabel = new ToolStripStatusLabel();
+            ColorModeSelector = new ToolStripDropDownButton();
+            ColorModeContextMenu = new ContextMenuStrip(components);
+            ColorModeDarkItem = new ToolStripMenuItem();
+            ColorModeLightItem = new ToolStripMenuItem();
             groupBox2 = new GroupBox();
             GeometryProperties = new PropertyGrid();
             ConfigGeometriesList = new ListBox();
             ConfigSceneList = new ListBox();
+            toolStripMenuItem1 = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            toolStripMenuItem2 = new ToolStripMenuItem();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
+            ColorModeContextMenu.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
             // 
@@ -158,7 +166,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // StatusBar
             // 
-            StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel, CurrentSceneBarLabel });
+            StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel, CurrentSceneBarLabel, ColorModeSelector });
             StatusBar.Location = new Point(0, 629);
             StatusBar.Name = "StatusBar";
             StatusBar.Size = new Size(584, 22);
@@ -169,7 +177,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             StatusBarLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
             StatusBarLabel.Name = "StatusBarLabel";
-            StatusBarLabel.Size = new Size(565, 17);
+            StatusBarLabel.Size = new Size(536, 17);
             StatusBarLabel.Spring = true;
             StatusBarLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -180,6 +188,38 @@ namespace codingfreaks.obscene.Ui.FormsApp
             CurrentSceneBarLabel.Name = "CurrentSceneBarLabel";
             CurrentSceneBarLabel.Size = new Size(4, 17);
             CurrentSceneBarLabel.ToolTipText = "Current selected OBS scene";
+            // 
+            // ColorModeSelector
+            // 
+            ColorModeSelector.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ColorModeSelector.DropDown = ColorModeContextMenu;
+            ColorModeSelector.Image = (Image)resources.GetObject("ColorModeSelector.Image");
+            ColorModeSelector.ImageTransparentColor = Color.Magenta;
+            ColorModeSelector.Name = "ColorModeSelector";
+            ColorModeSelector.Size = new Size(29, 20);
+            ColorModeSelector.Text = "Dark";
+            // 
+            // ColorModeContextMenu
+            // 
+            ColorModeContextMenu.Items.AddRange(new ToolStripItem[] { ColorModeDarkItem, ColorModeLightItem });
+            ColorModeContextMenu.Name = "ColorModeContextMenu";
+            ColorModeContextMenu.Size = new Size(181, 70);
+            // 
+            // ColorModeDarkItem
+            // 
+            ColorModeDarkItem.Name = "ColorModeDarkItem";
+            ColorModeDarkItem.Size = new Size(180, 22);
+            ColorModeDarkItem.Tag = "dark";
+            ColorModeDarkItem.Text = "Dark";
+            ColorModeDarkItem.Click += ColorModeItem_Click;
+            // 
+            // ColorModeLightItem
+            // 
+            ColorModeLightItem.Name = "ColorModeLightItem";
+            ColorModeLightItem.Size = new Size(180, 22);
+            ColorModeLightItem.Tag = "classic";
+            ColorModeLightItem.Text = "Light";
+            ColorModeLightItem.Click += ColorModeItem_Click;
             // 
             // groupBox2
             // 
@@ -226,6 +266,23 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ConfigSceneList.TabIndex = 0;
             ConfigSceneList.SelectedValueChanged += ConfigSceneList_SelectedValueChanged;
             // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(103, 22);
+            toolStripMenuItem1.Text = "&Open";
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(100, 6);
+            // 
+            // toolStripMenuItem2
+            // 
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(103, 22);
+            toolStripMenuItem2.Text = "E&xit";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -246,6 +303,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TrayContextMenu.ResumeLayout(false);
             StatusBar.ResumeLayout(false);
             StatusBar.PerformLayout();
+            ColorModeContextMenu.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -272,5 +330,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ListBox ConfigSceneList;
         private ListBox ConfigGeometriesList;
         private PropertyGrid GeometryProperties;
+        private ToolStripDropDownButton ColorModeSelector;
+        private ContextMenuStrip ColorModeContextMenu;
+        private ToolStripMenuItem ColorModeDarkItem;
+        private ToolStripMenuItem ColorModeLightItem;
+        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripMenuItem toolStripMenuItem2;
     }
 }
