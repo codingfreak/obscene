@@ -78,17 +78,18 @@ namespace codingfreaks.obscene.Ui.FormsApp
             groupBox1.Controls.Add(ObsProfileSelect);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(ObsSceneListView);
-            groupBox1.Location = new Point(12, 12);
+            groupBox1.Location = new Point(12, 28);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(560, 181);
+            groupBox1.Size = new Size(560, 165);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "OBS Info";
             // 
             // ObsSceneListSummaryLabel
             // 
+            ObsSceneListSummaryLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             ObsSceneListSummaryLabel.AutoSize = true;
-            ObsSceneListSummaryLabel.Location = new Point(6, 158);
+            ObsSceneListSummaryLabel.Location = new Point(6, 142);
             ObsSceneListSummaryLabel.Name = "ObsSceneListSummaryLabel";
             ObsSceneListSummaryLabel.Size = new Size(10, 15);
             ObsSceneListSummaryLabel.TabIndex = 3;
@@ -122,7 +123,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ObsSceneListView.FullRowSelect = true;
             ObsSceneListView.Location = new Point(6, 45);
             ObsSceneListView.Name = "ObsSceneListView";
-            ObsSceneListView.Size = new Size(548, 110);
+            ObsSceneListView.Size = new Size(548, 94);
             ObsSceneListView.TabIndex = 0;
             ObsSceneListView.UseCompatibleStateImageBehavior = false;
             ObsSceneListView.View = View.Details;
@@ -201,6 +202,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             ColorModeContextMenu.Items.AddRange(new ToolStripItem[] { ColorModeDarkItem, ColorModeLightItem });
             ColorModeContextMenu.Name = "ColorModeContextMenu";
+            ColorModeContextMenu.OwnerItem = ColorModeToolStripDropDown;
             ColorModeContextMenu.Size = new Size(102, 48);
             // 
             // ColorModeDarkItem
