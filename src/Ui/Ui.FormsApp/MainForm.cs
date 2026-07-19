@@ -7,8 +7,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
     using Logic.Obs.Models;
     using Logic.WinApi;
 
-    using Models;
-
     using OBSWebsocketDotNet;
 
     /// <summary>
@@ -69,7 +67,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             }
         }
 
-        private void ColorModeItem_Click(object sender, EventArgs e)
+        private async void ColorModeItem_Click(object sender, EventArgs e)
         {
             // NOTE: We need to sync this with whatever is currently selected
             var toolstrip = sender as ToolStripMenuItem;
@@ -96,34 +94,14 @@ namespace codingfreaks.obscene.Ui.FormsApp
             CheckActiveColorModelToolstripItem();
         }
 
-        private void ConfigGeometriesList_SelectedValueChanged(object sender, EventArgs e)
-        {
-            GeometryProperties.SelectedObject = (ConfigGeometriesList.SelectedItem as GeometryListItem)?.Data;
-        }
-
-        private void ConfigSceneList_SelectedValueChanged(object sender, EventArgs e)
+        private void ConfigSceneTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             GeometryProperties.SelectedObject = null;
-            ConfigGeometriesList.Items.Clear();
-            if (_settings == null)
+            if (e.Node?.Tag == null)
             {
                 return;
             }
-            var currentConfigKey = ConfigSceneList.SelectedItem?.ToString();
-            if (!_settings.Scenes.ContainsKey(currentConfigKey ?? string.Empty))
-            {
-                return;
-            }
-            var currentConfigScene = _settings.Scenes[currentConfigKey!];
-            var converted = currentConfigScene.Geometries.Select(g => new GeometryListItem
-            {
-                Label = g.GeometryType.ToString(),
-                Data = g
-            });
-            foreach (var geometry in converted)
-            {
-                ConfigGeometriesList.Items.Add(geometry);
-            }
+            GeometryProperties.SelectedObject = e.Node.Tag;
         }
 
         private void ExitObsenceContextCommand_Click(object sender, EventArgs e)
@@ -144,11 +122,26 @@ namespace codingfreaks.obscene.Ui.FormsApp
             }
             Invoke(() =>
             {
-                ConfigSceneList.Items.Clear();
-                var keys = _settings.Scenes.Select(s => s.Key.ToString())
-                    .Cast<object>()
-                    .ToArray();
-                ConfigSceneList.Items.AddRange(keys);
+                // TreeView
+                ConfigSceneTree.Nodes.Clear();
+                ConfigSceneTree.Nodes.AddRange(
+                    _settings.Scenes.Select(s =>
+                        {
+                            var node = new TreeNode(s.Key);
+                            var nodeScene = _settings.Scenes[s.Key];
+                            node.Nodes.AddRange(
+                                nodeScene.Geometries.Select(g =>
+                                    {
+                                        var childNode = new TreeNode(g.GeometryType.ToString())
+                                        {
+                                            Tag = g
+                                        };
+                                        return childNode;
+                                    })
+                                    .ToArray());
+                            return node;
+                        })
+                        .ToArray());
             });
         }
 
@@ -183,6 +176,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
             }
             var x = _settings.Scenes[CurrentSceneBarLabel.Text];
             _sceneQueue.Enqueue(CurrentSceneBarLabel.Text);
+        }
+
+        private void GeometryProperties_SelectedObjectsChanged(object sender, EventArgs e)
+        {
+            GeometryProperties.Visible = GeometryProperties.SelectedObject != null;
+            GeometryHintLabel.Visible = !GeometryProperties.Visible;
         }
 
         /// <summary>
@@ -309,6 +308,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             await InitObsAsync();
             await FillObsScenesAsync();
             CheckActiveColorModelToolstripItem();
+            GeometryHintLabel.Dock = DockStyle.Fill;
+            GeometryHintLabel.Visible = true;
         }
 
         private void ObsProfileSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -358,10 +359,10 @@ namespace codingfreaks.obscene.Ui.FormsApp
         }
 
         /// <summary>
-        /// Sets the content of the status label for the current activity to the given <paramref name="labelText"/>.
+        /// Sets the content of the status label for the current activity to the given <paramref name="labelText" />.
         /// </summary>
         /// <remarks>
-        /// Use <see cref="WriteStatusLabelAsync"/> if you want to change the text permantently.
+        /// Use <see cref="WriteStatusLabelAsync" /> if you want to change the text permantently.
         /// </remarks>
         /// <param name="labelText">The text to show.</param>
         /// <param name="durationInSeconds">Optional amount of time after which to switch back to the default text.</param>

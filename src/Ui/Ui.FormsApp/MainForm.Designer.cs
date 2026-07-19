@@ -50,9 +50,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ColorModeLightItem = new ToolStripMenuItem();
             ColorModeToolStripDropDown = new ToolStripDropDownButton();
             groupBox2 = new GroupBox();
+            DesignAreaSplitContainer = new SplitContainer();
+            ConfigSceneTree = new TreeView();
             GeometryProperties = new PropertyGrid();
-            ConfigGeometriesList = new ListBox();
-            ConfigSceneList = new ListBox();
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             toolStripMenuItem2 = new ToolStripMenuItem();
@@ -63,11 +63,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ExitToolStripButton = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
             TopMostToolStripCheck = new ToolStripButton();
+            GeometryHintLabel = new Label();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
             ColorModeContextMenu.SuspendLayout();
             groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)DesignAreaSplitContainer).BeginInit();
+            DesignAreaSplitContainer.Panel1.SuspendLayout();
+            DesignAreaSplitContainer.Panel2.SuspendLayout();
+            DesignAreaSplitContainer.SuspendLayout();
             MainToolStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -80,7 +85,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             groupBox1.Controls.Add(ObsSceneListView);
             groupBox1.Location = new Point(12, 28);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(560, 165);
+            groupBox1.Size = new Size(466, 165);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "OBS Info";
@@ -102,7 +107,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ObsProfileSelect.FormattingEnabled = true;
             ObsProfileSelect.Location = new Point(56, 16);
             ObsProfileSelect.Name = "ObsProfileSelect";
-            ObsProfileSelect.Size = new Size(498, 23);
+            ObsProfileSelect.Size = new Size(404, 23);
             ObsProfileSelect.TabIndex = 2;
             ObsProfileSelect.SelectedIndexChanged += ObsProfileSelect_SelectedIndexChanged;
             // 
@@ -123,7 +128,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ObsSceneListView.FullRowSelect = true;
             ObsSceneListView.Location = new Point(6, 45);
             ObsSceneListView.Name = "ObsSceneListView";
-            ObsSceneListView.Size = new Size(548, 94);
+            ObsSceneListView.Size = new Size(454, 94);
             ObsSceneListView.TabIndex = 0;
             ObsSceneListView.UseCompatibleStateImageBehavior = false;
             ObsSceneListView.View = View.Details;
@@ -176,9 +181,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // StatusBar
             // 
             StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel, CurrentSceneBarLabel });
-            StatusBar.Location = new Point(0, 629);
+            StatusBar.Location = new Point(0, 539);
             StatusBar.Name = "StatusBar";
-            StatusBar.Size = new Size(584, 22);
+            StatusBar.Size = new Size(490, 22);
             StatusBar.TabIndex = 1;
             StatusBar.Text = "statusStrip1";
             // 
@@ -186,7 +191,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             StatusBarLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
             StatusBarLabel.Name = "StatusBarLabel";
-            StatusBarLabel.Size = new Size(565, 17);
+            StatusBarLabel.Size = new Size(471, 17);
             StatusBarLabel.Spring = true;
             StatusBarLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -234,47 +239,52 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // groupBox2
             // 
             groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox2.Controls.Add(GeometryProperties);
-            groupBox2.Controls.Add(ConfigGeometriesList);
-            groupBox2.Controls.Add(ConfigSceneList);
+            groupBox2.Controls.Add(DesignAreaSplitContainer);
             groupBox2.Location = new Point(12, 199);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(560, 427);
+            groupBox2.Size = new Size(466, 337);
             groupBox2.TabIndex = 2;
             groupBox2.TabStop = false;
             groupBox2.Text = "Masks";
             // 
+            // DesignAreaSplitContainer
+            // 
+            DesignAreaSplitContainer.Dock = DockStyle.Fill;
+            DesignAreaSplitContainer.Location = new Point(3, 19);
+            DesignAreaSplitContainer.Name = "DesignAreaSplitContainer";
+            // 
+            // DesignAreaSplitContainer.Panel1
+            // 
+            DesignAreaSplitContainer.Panel1.Controls.Add(ConfigSceneTree);
+            // 
+            // DesignAreaSplitContainer.Panel2
+            // 
+            DesignAreaSplitContainer.Panel2.Controls.Add(GeometryHintLabel);
+            DesignAreaSplitContainer.Panel2.Controls.Add(GeometryProperties);
+            DesignAreaSplitContainer.Size = new Size(460, 315);
+            DesignAreaSplitContainer.SplitterDistance = 153;
+            DesignAreaSplitContainer.TabIndex = 4;
+            // 
+            // ConfigSceneTree
+            // 
+            ConfigSceneTree.Dock = DockStyle.Fill;
+            ConfigSceneTree.Location = new Point(0, 0);
+            ConfigSceneTree.Name = "ConfigSceneTree";
+            ConfigSceneTree.Size = new Size(153, 315);
+            ConfigSceneTree.TabIndex = 3;
+            ConfigSceneTree.AfterSelect += ConfigSceneTree_AfterSelect;
+            // 
             // GeometryProperties
             // 
-            GeometryProperties.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             GeometryProperties.BackColor = SystemColors.Control;
-            GeometryProperties.Location = new Point(242, 22);
+            GeometryProperties.Dock = DockStyle.Fill;
+            GeometryProperties.Location = new Point(0, 0);
             GeometryProperties.Name = "GeometryProperties";
-            GeometryProperties.Size = new Size(312, 364);
+            GeometryProperties.Size = new Size(303, 315);
             GeometryProperties.TabIndex = 2;
+            GeometryProperties.Visible = false;
             GeometryProperties.PropertyValueChanged += GeometryProperties_PropertyValueChanged;
-            // 
-            // ConfigGeometriesList
-            // 
-            ConfigGeometriesList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            ConfigGeometriesList.DisplayMember = "Label";
-            ConfigGeometriesList.FormattingEnabled = true;
-            ConfigGeometriesList.Location = new Point(142, 22);
-            ConfigGeometriesList.Name = "ConfigGeometriesList";
-            ConfigGeometriesList.Size = new Size(94, 364);
-            ConfigGeometriesList.TabIndex = 1;
-            ConfigGeometriesList.ValueMember = "Instance";
-            ConfigGeometriesList.SelectedValueChanged += ConfigGeometriesList_SelectedValueChanged;
-            // 
-            // ConfigSceneList
-            // 
-            ConfigSceneList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
-            ConfigSceneList.FormattingEnabled = true;
-            ConfigSceneList.Location = new Point(6, 22);
-            ConfigSceneList.Name = "ConfigSceneList";
-            ConfigSceneList.Size = new Size(130, 364);
-            ConfigSceneList.TabIndex = 0;
-            ConfigSceneList.SelectedValueChanged += ConfigSceneList_SelectedValueChanged;
+            GeometryProperties.SelectedObjectsChanged += GeometryProperties_SelectedObjectsChanged;
             // 
             // toolStripMenuItem1
             // 
@@ -298,7 +308,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, ColorModeToolStripDropDown });
             MainToolStrip.Location = new Point(0, 0);
             MainToolStrip.Name = "MainToolStrip";
-            MainToolStrip.Size = new Size(584, 25);
+            MainToolStrip.Size = new Size(490, 25);
             MainToolStrip.TabIndex = 3;
             // 
             // LoadToolStripButton
@@ -353,11 +363,21 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TopMostToolStripCheck.ToolTipText = "Stay on top";
             TopMostToolStripCheck.CheckStateChanged += TopMostToolStripCheck_CheckStateChanged;
             // 
+            // GeometryHintLabel
+            // 
+            GeometryHintLabel.Location = new Point(63, 96);
+            GeometryHintLabel.Name = "GeometryHintLabel";
+            GeometryHintLabel.Size = new Size(185, 129);
+            GeometryHintLabel.TabIndex = 3;
+            GeometryHintLabel.Text = "Select a geometry first.";
+            GeometryHintLabel.TextAlign = ContentAlignment.MiddleCenter;
+            GeometryHintLabel.Visible = false;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(584, 651);
+            ClientSize = new Size(490, 561);
             Controls.Add(MainToolStrip);
             Controls.Add(groupBox2);
             Controls.Add(StatusBar);
@@ -377,6 +397,10 @@ namespace codingfreaks.obscene.Ui.FormsApp
             StatusBar.PerformLayout();
             ColorModeContextMenu.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
+            DesignAreaSplitContainer.Panel1.ResumeLayout(false);
+            DesignAreaSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)DesignAreaSplitContainer).EndInit();
+            DesignAreaSplitContainer.ResumeLayout(false);
             MainToolStrip.ResumeLayout(false);
             MainToolStrip.PerformLayout();
             ResumeLayout(false);
@@ -401,8 +425,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ColumnHeader columnHeader2;
         private Label ObsSceneListSummaryLabel;
         private GroupBox groupBox2;
-        private ListBox ConfigSceneList;
-        private ListBox ConfigGeometriesList;
         private PropertyGrid GeometryProperties;
         private ContextMenuStrip ColorModeContextMenu;
         private ToolStripMenuItem ColorModeDarkItem;
@@ -418,5 +440,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ToolStripButton ExitToolStripButton;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripButton LoadToolStripButton;
+        private TreeView ConfigSceneTree;
+        private SplitContainer DesignAreaSplitContainer;
+        private Label GeometryHintLabel;
     }
 }
