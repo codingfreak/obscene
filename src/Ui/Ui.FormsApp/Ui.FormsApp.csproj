@@ -9,6 +9,15 @@
         <UserSecretsId>d700d67e-7ecb-4697-895c-ded98e79cdef</UserSecretsId>
     </PropertyGroup>
     <ItemGroup>
+        <Content Include="..\..\..\assets\ico\obscene.ico" Link="icons\obscene.ico" />
+        <Content Include="..\..\..\assets\png\dark.png" Link="icons\dark.png" />
+        <Content Include="..\..\..\assets\png\exit.png" Link="icons\exit.png" />
+        <Content Include="..\..\..\assets\png\light.png" Link="icons\light.png" />
+        <Content Include="..\..\..\assets\png\load.png" Link="icons\load.png" />
+        <Content Include="..\..\..\assets\png\logo.png" Link="icons\logo.png" />
+        <Content Include="..\..\..\assets\png\logo_square.png" Link="icons\logo_square.png" />
+        <Content Include="..\..\..\assets\png\save.png" Link="icons\save.png" />
+        <Content Include="..\..\..\assets\png\topmost.png" Link="icons\topmost.png" />
         <Content Include="configs\my.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
