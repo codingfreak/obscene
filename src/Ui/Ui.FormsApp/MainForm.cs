@@ -11,6 +11,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
     using OBSWebsocketDotNet;
 
+    /// <summary>
+    /// The main form of the application.
+    /// </summary>
     public partial class MainForm : Form
     {
         #region member vars
@@ -182,6 +185,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _sceneQueue.Enqueue(CurrentSceneBarLabel.Text);
         }
 
+        /// <summary>
+        /// Ensures that the scene selected in OBS is highlighted.
+        /// </summary>
         private void HighlightCurrentScene()
         {
             Invoke(() =>
@@ -200,6 +206,10 @@ namespace codingfreaks.obscene.Ui.FormsApp
             });
         }
 
+        /// <summary>
+        /// Starts a background task which constantly syncs with changes in OBS scenes.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Is thrown if the sender of an OBS event is actually not resolved.</exception>
         private async Task InitObsAsync()
         {
             if (_settings == null)
@@ -275,6 +285,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 ?? Environment.GetEnvironmentVariable("OBS_PASSWORD"));
         }
 
+        /// <summary>
+        /// Loads the configuration from a file.
+        /// </summary>
         private async Task LoadConfigAsync()
         {
             var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configs", "my.json");
@@ -344,6 +357,14 @@ namespace codingfreaks.obscene.Ui.FormsApp
             HighlightCurrentScene();
         }
 
+        /// <summary>
+        /// Sets the content of the status label for the current activity to the given <paramref name="labelText"/>.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="WriteStatusLabelAsync"/> if you want to change the text permantently.
+        /// </remarks>
+        /// <param name="labelText">The text to show.</param>
+        /// <param name="durationInSeconds">Optional amount of time after which to switch back to the default text.</param>
         private void WriteStatusLabel(string labelText, int durationInSeconds = 2)
         {
             if (_formClosingCalled)
@@ -353,15 +374,15 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Invoke(() =>
             {
                 StatusBarLabel.Text = labelText;
-                if (durationInSeconds > 0)
-                {
-                    Task.Delay(TimeSpan.FromSeconds(durationInSeconds))
-                        .ContinueWith(_ =>
-                        {
-                            Invoke(() => StatusBarLabel.Text = "Ready");
-                        });
-                }
             });
+            if (durationInSeconds > 0)
+            {
+                Task.Delay(TimeSpan.FromSeconds(durationInSeconds))
+                    .ContinueWith(_ =>
+                    {
+                        WriteStatusLabel("Ready");
+                    });
+            }
         }
 
         private async Task WriteStatusLabelAsync(string labelText)
