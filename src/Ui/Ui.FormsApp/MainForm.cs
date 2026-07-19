@@ -147,7 +147,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
             {
                 return;
             }
-            var x = _settings.Scenes[CurrentSceneBarLabel.Text];
             _sceneQueue.Enqueue(CurrentSceneBarLabel.Text);
         }
 
@@ -285,6 +284,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _formClosingCalled = true;
             _cancellationTokenSource.Cancel();
             _obs?.Disconnect();
+            _queueWatcher?.Dispose();
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
