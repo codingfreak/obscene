@@ -377,6 +377,15 @@ namespace codingfreaks.obscene.Ui.FormsApp
             CheckActiveColorModelToolstripItem();
         }
 
+        private async void SettingsToolStripDropDown_Click(object sender, EventArgs e)
+        {
+            var settingsForm = new SettingsForm
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            await settingsForm.ShowDialogAsync();
+        }
+
         private void TopMostToolStripCheck_CheckStateChanged(object sender, EventArgs e)
         {
             TopMost = TopMostToolStripCheck.Checked;

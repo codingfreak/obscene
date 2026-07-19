@@ -64,6 +64,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ExitToolStripButton = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
             TopMostToolStripCheck = new ToolStripButton();
+            toolStripSeparator4 = new ToolStripSeparator();
+            SettingsToolStripDropDown = new ToolStripButton();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
@@ -208,7 +210,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             ColorModeContextMenu.Items.AddRange(new ToolStripItem[] { ColorModeDarkItem, ColorModeLightItem });
             ColorModeContextMenu.Name = "ColorModeContextMenu";
-            ColorModeContextMenu.OwnerItem = ColorModeToolStripDropDown;
             ColorModeContextMenu.Size = new Size(102, 48);
             // 
             // ColorModeDarkItem
@@ -316,7 +317,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // MainToolStrip
             // 
-            MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, ColorModeToolStripDropDown });
+            MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, ColorModeToolStripDropDown, toolStripSeparator4, SettingsToolStripDropDown });
             MainToolStrip.Location = new Point(0, 0);
             MainToolStrip.Name = "MainToolStrip";
             MainToolStrip.Size = new Size(490, 25);
@@ -374,6 +375,21 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TopMostToolStripCheck.Text = "Top most";
             TopMostToolStripCheck.ToolTipText = "Stay on top";
             TopMostToolStripCheck.CheckStateChanged += TopMostToolStripCheck_CheckStateChanged;
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(6, 25);
+            // 
+            // SettingsToolStripDropDown
+            // 
+            SettingsToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            SettingsToolStripDropDown.Image = (Image)resources.GetObject("SettingsToolStripDropDown.Image");
+            SettingsToolStripDropDown.ImageTransparentColor = Color.Magenta;
+            SettingsToolStripDropDown.Name = "SettingsToolStripDropDown";
+            SettingsToolStripDropDown.Size = new Size(23, 22);
+            SettingsToolStripDropDown.Text = "Settings";
+            SettingsToolStripDropDown.Click += SettingsToolStripDropDown_Click;
             // 
             // MainForm
             // 
@@ -445,5 +461,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private TreeView ConfigSceneTree;
         private SplitContainer DesignAreaSplitContainer;
         private Label GeometryHintLabel;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripButton SettingsToolStripDropDown;
     }
 }
