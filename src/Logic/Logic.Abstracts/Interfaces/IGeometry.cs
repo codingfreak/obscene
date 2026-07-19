@@ -26,6 +26,11 @@ namespace codingfreaks.obscene.Logic.Abstracts.Interfaces
         #region properties
 
         /// <summary>
+        /// Unique id of the geometry.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// The type of the geometry.
         /// </summary>
         GeometryType GeometryType { get; }

@@ -45,10 +45,10 @@ namespace codingfreaks.obscene.Ui.FormsApp
             StatusBar = new StatusStrip();
             StatusBarLabel = new ToolStripStatusLabel();
             CurrentSceneBarLabel = new ToolStripStatusLabel();
-            ColorModeSelector = new ToolStripDropDownButton();
             ColorModeContextMenu = new ContextMenuStrip(components);
             ColorModeDarkItem = new ToolStripMenuItem();
             ColorModeLightItem = new ToolStripMenuItem();
+            ColorModeToolStripDropDown = new ToolStripDropDownButton();
             groupBox2 = new GroupBox();
             GeometryProperties = new PropertyGrid();
             ConfigGeometriesList = new ListBox();
@@ -56,11 +56,19 @@ namespace codingfreaks.obscene.Ui.FormsApp
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             toolStripMenuItem2 = new ToolStripMenuItem();
+            MainToolStrip = new ToolStrip();
+            LoadToolStripButton = new ToolStripButton();
+            SaveToolStripButton = new ToolStripButton();
+            ToolStripSep1 = new ToolStripSeparator();
+            ExitToolStripButton = new ToolStripButton();
+            toolStripSeparator3 = new ToolStripSeparator();
+            TopMostToolStripCheck = new ToolStripButton();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
             ColorModeContextMenu.SuspendLayout();
             groupBox2.SuspendLayout();
+            MainToolStrip.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
@@ -70,17 +78,18 @@ namespace codingfreaks.obscene.Ui.FormsApp
             groupBox1.Controls.Add(ObsProfileSelect);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(ObsSceneListView);
-            groupBox1.Location = new Point(12, 12);
+            groupBox1.Location = new Point(12, 28);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(560, 181);
+            groupBox1.Size = new Size(560, 165);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "OBS Info";
             // 
             // ObsSceneListSummaryLabel
             // 
+            ObsSceneListSummaryLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             ObsSceneListSummaryLabel.AutoSize = true;
-            ObsSceneListSummaryLabel.Location = new Point(6, 158);
+            ObsSceneListSummaryLabel.Location = new Point(6, 142);
             ObsSceneListSummaryLabel.Name = "ObsSceneListSummaryLabel";
             ObsSceneListSummaryLabel.Size = new Size(10, 15);
             ObsSceneListSummaryLabel.TabIndex = 3;
@@ -114,7 +123,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ObsSceneListView.FullRowSelect = true;
             ObsSceneListView.Location = new Point(6, 45);
             ObsSceneListView.Name = "ObsSceneListView";
-            ObsSceneListView.Size = new Size(548, 110);
+            ObsSceneListView.Size = new Size(548, 94);
             ObsSceneListView.TabIndex = 0;
             ObsSceneListView.UseCompatibleStateImageBehavior = false;
             ObsSceneListView.View = View.Details;
@@ -166,7 +175,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // StatusBar
             // 
-            StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel, CurrentSceneBarLabel, ColorModeSelector });
+            StatusBar.Items.AddRange(new ToolStripItem[] { StatusBarLabel, CurrentSceneBarLabel });
             StatusBar.Location = new Point(0, 629);
             StatusBar.Name = "StatusBar";
             StatusBar.Size = new Size(584, 22);
@@ -177,7 +186,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             StatusBarLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Top | ToolStripStatusLabelBorderSides.Right | ToolStripStatusLabelBorderSides.Bottom;
             StatusBarLabel.Name = "StatusBarLabel";
-            StatusBarLabel.Size = new Size(536, 17);
+            StatusBarLabel.Size = new Size(565, 17);
             StatusBarLabel.Spring = true;
             StatusBarLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -189,26 +198,17 @@ namespace codingfreaks.obscene.Ui.FormsApp
             CurrentSceneBarLabel.Size = new Size(4, 17);
             CurrentSceneBarLabel.ToolTipText = "Current selected OBS scene";
             // 
-            // ColorModeSelector
-            // 
-            ColorModeSelector.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            ColorModeSelector.DropDown = ColorModeContextMenu;
-            ColorModeSelector.Image = (Image)resources.GetObject("ColorModeSelector.Image");
-            ColorModeSelector.ImageTransparentColor = Color.Magenta;
-            ColorModeSelector.Name = "ColorModeSelector";
-            ColorModeSelector.Size = new Size(29, 20);
-            ColorModeSelector.Text = "Dark";
-            // 
             // ColorModeContextMenu
             // 
             ColorModeContextMenu.Items.AddRange(new ToolStripItem[] { ColorModeDarkItem, ColorModeLightItem });
             ColorModeContextMenu.Name = "ColorModeContextMenu";
-            ColorModeContextMenu.Size = new Size(181, 70);
+            ColorModeContextMenu.OwnerItem = ColorModeToolStripDropDown;
+            ColorModeContextMenu.Size = new Size(102, 48);
             // 
             // ColorModeDarkItem
             // 
             ColorModeDarkItem.Name = "ColorModeDarkItem";
-            ColorModeDarkItem.Size = new Size(180, 22);
+            ColorModeDarkItem.Size = new Size(101, 22);
             ColorModeDarkItem.Tag = "dark";
             ColorModeDarkItem.Text = "Dark";
             ColorModeDarkItem.Click += ColorModeItem_Click;
@@ -216,10 +216,20 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // ColorModeLightItem
             // 
             ColorModeLightItem.Name = "ColorModeLightItem";
-            ColorModeLightItem.Size = new Size(180, 22);
+            ColorModeLightItem.Size = new Size(101, 22);
             ColorModeLightItem.Tag = "classic";
             ColorModeLightItem.Text = "Light";
             ColorModeLightItem.Click += ColorModeItem_Click;
+            // 
+            // ColorModeToolStripDropDown
+            // 
+            ColorModeToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ColorModeToolStripDropDown.DropDown = ColorModeContextMenu;
+            ColorModeToolStripDropDown.Image = (Image)resources.GetObject("ColorModeToolStripDropDown.Image");
+            ColorModeToolStripDropDown.ImageTransparentColor = Color.Magenta;
+            ColorModeToolStripDropDown.Name = "ColorModeToolStripDropDown";
+            ColorModeToolStripDropDown.Size = new Size(29, 22);
+            ColorModeToolStripDropDown.Text = "Color mode";
             // 
             // groupBox2
             // 
@@ -283,14 +293,76 @@ namespace codingfreaks.obscene.Ui.FormsApp
             toolStripMenuItem2.Size = new Size(103, 22);
             toolStripMenuItem2.Text = "E&xit";
             // 
+            // MainToolStrip
+            // 
+            MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, ColorModeToolStripDropDown });
+            MainToolStrip.Location = new Point(0, 0);
+            MainToolStrip.Name = "MainToolStrip";
+            MainToolStrip.Size = new Size(584, 25);
+            MainToolStrip.TabIndex = 3;
+            // 
+            // LoadToolStripButton
+            // 
+            LoadToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            LoadToolStripButton.Image = (Image)resources.GetObject("LoadToolStripButton.Image");
+            LoadToolStripButton.ImageTransparentColor = Color.Magenta;
+            LoadToolStripButton.Name = "LoadToolStripButton";
+            LoadToolStripButton.Size = new Size(23, 22);
+            LoadToolStripButton.Text = "Load";
+            LoadToolStripButton.ToolTipText = "Load settings";
+            // 
+            // SaveToolStripButton
+            // 
+            SaveToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            SaveToolStripButton.Image = (Image)resources.GetObject("SaveToolStripButton.Image");
+            SaveToolStripButton.ImageTransparentColor = Color.Magenta;
+            SaveToolStripButton.Name = "SaveToolStripButton";
+            SaveToolStripButton.Size = new Size(23, 22);
+            SaveToolStripButton.Text = "toolStripButton1";
+            SaveToolStripButton.ToolTipText = "Save Settings";
+            // 
+            // ToolStripSep1
+            // 
+            ToolStripSep1.Name = "ToolStripSep1";
+            ToolStripSep1.Size = new Size(6, 25);
+            // 
+            // ExitToolStripButton
+            // 
+            ExitToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ExitToolStripButton.Image = (Image)resources.GetObject("ExitToolStripButton.Image");
+            ExitToolStripButton.ImageTransparentColor = Color.Magenta;
+            ExitToolStripButton.Name = "ExitToolStripButton";
+            ExitToolStripButton.Size = new Size(23, 22);
+            ExitToolStripButton.Text = "toolStripButton1";
+            ExitToolStripButton.ToolTipText = "Exit application";
+            ExitToolStripButton.Click += ExitToolStripButton_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(6, 25);
+            // 
+            // TopMostToolStripCheck
+            // 
+            TopMostToolStripCheck.CheckOnClick = true;
+            TopMostToolStripCheck.Image = (Image)resources.GetObject("TopMostToolStripCheck.Image");
+            TopMostToolStripCheck.ImageTransparentColor = Color.Magenta;
+            TopMostToolStripCheck.Name = "TopMostToolStripCheck";
+            TopMostToolStripCheck.Size = new Size(77, 22);
+            TopMostToolStripCheck.Text = "Top most";
+            TopMostToolStripCheck.ToolTipText = "Stay on top";
+            TopMostToolStripCheck.CheckStateChanged += TopMostToolStripCheck_CheckStateChanged;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(584, 651);
+            Controls.Add(MainToolStrip);
             Controls.Add(groupBox2);
             Controls.Add(StatusBar);
             Controls.Add(groupBox1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new Size(500, 600);
@@ -305,6 +377,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             StatusBar.PerformLayout();
             ColorModeContextMenu.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
+            MainToolStrip.ResumeLayout(false);
+            MainToolStrip.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -330,12 +404,19 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ListBox ConfigSceneList;
         private ListBox ConfigGeometriesList;
         private PropertyGrid GeometryProperties;
-        private ToolStripDropDownButton ColorModeSelector;
         private ContextMenuStrip ColorModeContextMenu;
         private ToolStripMenuItem ColorModeDarkItem;
         private ToolStripMenuItem ColorModeLightItem;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripMenuItem toolStripMenuItem2;
+        private ToolStrip MainToolStrip;
+        private ToolStripButton TopMostToolStripCheck;
+        private ToolStripDropDownButton ColorModeToolStripDropDown;
+        private ToolStripButton SaveToolStripButton;
+        private ToolStripSeparator ToolStripSep1;
+        private ToolStripButton ExitToolStripButton;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton LoadToolStripButton;
     }
 }

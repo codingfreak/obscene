@@ -12,6 +12,11 @@ namespace codingfreaks.obscene.Logic.Abstracts.Models
         #region properties
 
         /// <summary>
+        /// Unique id of the geometry.
+        /// </summary>
+        public string Id { get; set; } = null!;
+
+        /// <summary>
         /// The type of the geometry.
         /// </summary>
         public GeometryType GeometryType { get; set; }
