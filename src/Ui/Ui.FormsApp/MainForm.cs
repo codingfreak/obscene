@@ -67,33 +67,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
             }
         }
 
-        private async void ColorModeItem_Click(object sender, EventArgs e)
-        {
-            // NOTE: We need to sync this with whatever is currently selected
-            var toolstrip = sender as ToolStripMenuItem;
-            if (toolstrip == null)
-            {
-                throw new InvalidOperationException("Unkown sender.");
-            }
-            var text = toolstrip.Name!;
-            if (text.Contains("dark", StringComparison.InvariantCultureIgnoreCase))
-            {
-                Application.SetColorMode(SystemColorMode.Dark);
-            }
-            else
-            {
-                Application.SetColorMode(SystemColorMode.Classic);
-            }
-            // Put the form in invisible mode and bring it up again to try to refresh the colors
-            WindowState = FormWindowState.Minimized;
-            ShowInTaskbar = false;
-            // TODO This is not working relyable sadly
-            Refresh();
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = false;
-            CheckActiveColorModelToolstripItem();
-        }
-
         private void ConfigSceneTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             GeometryProperties.SelectedObject = null;
@@ -278,6 +251,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 _sceneQueue.Enqueue(args.SceneName);
             };
             await WriteStatusLabelAsync("Connecting to OBS...");
+            // TODO Get this from settings
             _obs.ConnectAsync(
                 "ws://localhost:4455",
                 Environment.GetEnvironmentVariable("Obs:Password")
@@ -289,9 +263,20 @@ namespace codingfreaks.obscene.Ui.FormsApp
         /// </summary>
         private async Task LoadConfigAsync()
         {
-            var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configs", "my.json");
-            _settings = await Settings.LoadAsync(settingsPath)
+            _settings = await Settings.LoadAsync(SettingsPath)
                 .ConfigureAwait(false);
+            // apply app settings
+            await InvokeAsync(() =>
+            {
+                TopMost = _settings.AppSettings.TopMost;
+                Location = _settings.AppSettings.MainFormLocation ?? Location;
+                Size = _settings.AppSettings.MainFormSize ?? Size;
+                // sync controls
+                TopMostToolStripCheck.Checked = TopMost;
+                SetColorMode(
+                    _settings.AppSettings.IsDarkMode ? ColorModeDarkItem : ColorModeLightItem,
+                    EventArgs.Empty);
+            });
             FillConfigScenes();
         }
 
@@ -304,12 +289,14 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private async void MainForm_Load(object sender, EventArgs e)
         {
+            await InvokeAsync(SuspendLayout);
             await LoadConfigAsync();
             await InitObsAsync();
             await FillObsScenesAsync();
             CheckActiveColorModelToolstripItem();
             GeometryHintLabel.Dock = DockStyle.Fill;
             GeometryHintLabel.Visible = true;
+            await InvokeAsync(() => ResumeLayout(true));
         }
 
         private void ObsProfileSelect_SelectedIndexChanged(object sender, EventArgs e)
@@ -344,6 +331,52 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ShowInTaskbar = true;
         }
 
+        private async Task SaveConfigAsync()
+        {
+            if (_settings == null)
+            {
+                return;
+            }
+            _settings.AppSettings.MainFormLocation = Location;
+            _settings.AppSettings.MainFormSize = Size;
+            _settings.AppSettings.TopMost = TopMost;
+            _settings.AppSettings.IsDarkMode = ColorModeDarkItem.Checked;
+            await _settings.SaveAsync(SettingsPath);
+            WriteStatusLabel("Settings saved.");
+        }
+
+        private async void SaveToolStripButton_Click(object sender, EventArgs e)
+        {
+            await SaveConfigAsync();
+        }
+
+        private async void SetColorMode(object sender, EventArgs e)
+        {
+            // NOTE: We need to sync this with whatever is currently selected
+            var toolstrip = sender as ToolStripMenuItem;
+            if (toolstrip == null)
+            {
+                throw new InvalidOperationException("Unkown sender.");
+            }
+            var text = toolstrip.Name!;
+            if (text.Contains("dark", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Application.SetColorMode(SystemColorMode.Dark);
+            }
+            else
+            {
+                Application.SetColorMode(SystemColorMode.Classic);
+            }
+            // Put the form in invisible mode and bring it up again to try to refresh the colors
+            WindowState = FormWindowState.Minimized;
+            ShowInTaskbar = false;
+            // TODO This is not working relyable sadly
+            Refresh();
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = false;
+            CheckActiveColorModelToolstripItem();
+        }
+
         private void TopMostToolStripCheck_CheckStateChanged(object sender, EventArgs e)
         {
             TopMost = TopMostToolStripCheck.Checked;
@@ -358,11 +391,18 @@ namespace codingfreaks.obscene.Ui.FormsApp
             HighlightCurrentScene();
         }
 
+        //private Task? _writeUpdater;
+
         /// <summary>
         /// Sets the content of the status label for the current activity to the given <paramref name="labelText" />.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// Use <see cref="WriteStatusLabelAsync" /> if you want to change the text permantently.
+        /// </para>
+        /// <para>
+        /// Set <paramref name="durationInSeconds" /> to 0 in order to write permanent.
+        /// </para>
         /// </remarks>
         /// <param name="labelText">The text to show.</param>
         /// <param name="durationInSeconds">Optional amount of time after which to switch back to the default text.</param>
@@ -381,7 +421,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 Task.Delay(TimeSpan.FromSeconds(durationInSeconds))
                     .ContinueWith(_ =>
                     {
-                        WriteStatusLabel("Ready");
+                        WriteStatusLabel("Ready", 0);
                     });
             }
         }
@@ -397,6 +437,19 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 StatusBarLabel.Text = labelText;
             });
         }
+
+        #endregion
+
+        #region properties
+
+        /// <summary>
+        /// The path where the settings should be stored at and loaded from.
+        /// </summary>
+        /// <remarks>
+        /// TODO: This needs to be checked.
+        /// </remarks>
+        private static string SettingsPath =>
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "obscene.json");
 
         #endregion
     }

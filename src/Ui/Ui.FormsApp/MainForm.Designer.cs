@@ -52,6 +52,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             groupBox2 = new GroupBox();
             DesignAreaSplitContainer = new SplitContainer();
             ConfigSceneTree = new TreeView();
+            GeometryHintLabel = new Label();
             GeometryProperties = new PropertyGrid();
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
@@ -63,7 +64,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ExitToolStripButton = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
             TopMostToolStripCheck = new ToolStripButton();
-            GeometryHintLabel = new Label();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
@@ -109,6 +109,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ObsProfileSelect.Name = "ObsProfileSelect";
             ObsProfileSelect.Size = new Size(404, 23);
             ObsProfileSelect.TabIndex = 2;
+            ObsProfileSelect.Visible = false;
             ObsProfileSelect.SelectedIndexChanged += ObsProfileSelect_SelectedIndexChanged;
             // 
             // label1
@@ -216,7 +217,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ColorModeDarkItem.Size = new Size(101, 22);
             ColorModeDarkItem.Tag = "dark";
             ColorModeDarkItem.Text = "Dark";
-            ColorModeDarkItem.Click += ColorModeItem_Click;
+            ColorModeDarkItem.Click += SetColorMode;
             // 
             // ColorModeLightItem
             // 
@@ -224,7 +225,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ColorModeLightItem.Size = new Size(101, 22);
             ColorModeLightItem.Tag = "classic";
             ColorModeLightItem.Text = "Light";
-            ColorModeLightItem.Click += ColorModeItem_Click;
+            ColorModeLightItem.Click += SetColorMode;
             // 
             // ColorModeToolStripDropDown
             // 
@@ -273,6 +274,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ConfigSceneTree.Size = new Size(153, 315);
             ConfigSceneTree.TabIndex = 3;
             ConfigSceneTree.AfterSelect += ConfigSceneTree_AfterSelect;
+            // 
+            // GeometryHintLabel
+            // 
+            GeometryHintLabel.Location = new Point(63, 96);
+            GeometryHintLabel.Name = "GeometryHintLabel";
+            GeometryHintLabel.Size = new Size(185, 129);
+            GeometryHintLabel.TabIndex = 3;
+            GeometryHintLabel.Text = "Select a geometry first.";
+            GeometryHintLabel.TextAlign = ContentAlignment.MiddleCenter;
+            GeometryHintLabel.Visible = false;
             // 
             // GeometryProperties
             // 
@@ -330,6 +341,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             SaveToolStripButton.Size = new Size(23, 22);
             SaveToolStripButton.Text = "toolStripButton1";
             SaveToolStripButton.ToolTipText = "Save Settings";
+            SaveToolStripButton.Click += SaveToolStripButton_Click;
             // 
             // ToolStripSep1
             // 
@@ -362,16 +374,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TopMostToolStripCheck.Text = "Top most";
             TopMostToolStripCheck.ToolTipText = "Stay on top";
             TopMostToolStripCheck.CheckStateChanged += TopMostToolStripCheck_CheckStateChanged;
-            // 
-            // GeometryHintLabel
-            // 
-            GeometryHintLabel.Location = new Point(63, 96);
-            GeometryHintLabel.Name = "GeometryHintLabel";
-            GeometryHintLabel.Size = new Size(185, 129);
-            GeometryHintLabel.TabIndex = 3;
-            GeometryHintLabel.Text = "Select a geometry first.";
-            GeometryHintLabel.TextAlign = ContentAlignment.MiddleCenter;
-            GeometryHintLabel.Visible = false;
             // 
             // MainForm
             // 

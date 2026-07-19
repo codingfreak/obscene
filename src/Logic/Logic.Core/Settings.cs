@@ -62,6 +62,11 @@ namespace codingfreaks.obscene.Logic.Core
         /// </summary>
         public Dictionary<string, Scene> Scenes { get; set; } = new();
 
+        /// <summary>
+        /// The options for the app behavior and display.
+        /// </summary>
+        public AppSettings AppSettings { get; set; } = new();
+
         #endregion
     }
 }

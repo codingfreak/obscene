@@ -18,6 +18,34 @@ namespace codingfreaks.obscene.Logic.Core.Extensions
         #region methods
 
         /// <summary>
+        /// Converts the given <paramref name="original" /> to the matching serialization data.
+        /// </summary>
+        public static AppSettings ToAppSettings(this AppSettingsData original)
+        {
+            return new AppSettings
+            {
+                MainFormLocation = original.MainFormLocation,
+                MainFormSize = original.MainFormSize,
+                IsDarkMode = original.IsDarkMode,
+                TopMost = original.TopMost
+            };
+        }
+
+        /// <summary>
+        /// Converts the given <paramref name="original" /> to the matching serialization data.
+        /// </summary>
+        public static AppSettingsData ToAppSettingsData(this AppSettings original)
+        {
+            return new AppSettingsData
+            {
+                MainFormLocation = original.MainFormLocation,
+                MainFormSize = original.MainFormSize,
+                IsDarkMode = original.IsDarkMode,
+                TopMost = original.TopMost
+            };
+        }
+
+        /// <summary>
         /// Converts the given <paramref name="original" /> serialization data into the internally used color type.
         /// </summary>
         /// <param name="original"></param>
@@ -124,6 +152,7 @@ namespace codingfreaks.obscene.Logic.Core.Extensions
         {
             return new Settings
             {
+                AppSettings = original.AppSettings.ToAppSettings(),
                 Scenes = original.Scenes.ToDictionary(s => s.Key, s => s.Value.ToScene())
             };
         }
@@ -135,6 +164,7 @@ namespace codingfreaks.obscene.Logic.Core.Extensions
         {
             return new SettingsData
             {
+                AppSettings = original.AppSettings.ToAppSettingsData(),
                 Scenes = original.Scenes.ToDictionary(s => s.Key, s => s.Value.ToSceneData())
             };
         }
