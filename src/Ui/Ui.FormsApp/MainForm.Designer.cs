@@ -66,6 +66,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TopMostToolStripCheck = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             SettingsToolStripDropDown = new ToolStripButton();
+            toolStripSeparator5 = new ToolStripSeparator();
+            ReconnectObsToolStripButton = new ToolStripButton();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
@@ -317,7 +319,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // MainToolStrip
             // 
-            MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, ColorModeToolStripDropDown, toolStripSeparator4, SettingsToolStripDropDown });
+            MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, ColorModeToolStripDropDown, toolStripSeparator4, SettingsToolStripDropDown, toolStripSeparator5, ReconnectObsToolStripButton });
             MainToolStrip.Location = new Point(0, 0);
             MainToolStrip.Name = "MainToolStrip";
             MainToolStrip.Size = new Size(490, 25);
@@ -391,6 +393,22 @@ namespace codingfreaks.obscene.Ui.FormsApp
             SettingsToolStripDropDown.Text = "Settings";
             SettingsToolStripDropDown.Click += SettingsToolStripDropDown_Click;
             // 
+            // toolStripSeparator5
+            // 
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(6, 25);
+            // 
+            // ReconnectObsToolStripButton
+            // 
+            ReconnectObsToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ReconnectObsToolStripButton.Enabled = false;
+            ReconnectObsToolStripButton.Image = (Image)resources.GetObject("ReconnectObsToolStripButton.Image");
+            ReconnectObsToolStripButton.ImageTransparentColor = Color.Magenta;
+            ReconnectObsToolStripButton.Name = "ReconnectObsToolStripButton";
+            ReconnectObsToolStripButton.Size = new Size(23, 22);
+            ReconnectObsToolStripButton.ToolTipText = "Reconnect to OBS";
+            ReconnectObsToolStripButton.Click += ReconnectObsToolStripButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -463,5 +481,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private Label GeometryHintLabel;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripButton SettingsToolStripDropDown;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripButton ReconnectObsToolStripButton;
     }
 }

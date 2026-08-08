@@ -19,6 +19,8 @@
         <Content Include="..\..\..\assets\png\logo.png" Link="icons\logo.png" />
         <Content Include="..\..\..\assets\png\logo_square.png" Link="icons\logo_square.png" />
         <Content Include="..\..\..\assets\png\save.png" Link="icons\save.png" />
+        <Content Include="..\..\..\assets\png\refresh.png" Link="icons\refresh.png" />
+        <Content Include="..\..\..\assets\png\settings.png" Link="icons\settings.png" />
         <Content Include="..\..\..\assets\png\topmost.png" Link="icons\topmost.png" />
         <Content Include="configs\backup.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

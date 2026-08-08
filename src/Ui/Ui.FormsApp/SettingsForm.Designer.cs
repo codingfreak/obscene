@@ -28,6 +28,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             AbortButton = new Button();
             OkButton = new Button();
             groupBox1 = new GroupBox();
@@ -172,11 +173,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Controls.Add(groupBox1);
             Controls.Add(OkButton);
             Controls.Add(AbortButton);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new Size(450, 270);
             Name = "SettingsForm";
-            Text = "SettingsForm";
+            Text = "obscene Settings";
             Load += SettingsForm_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();

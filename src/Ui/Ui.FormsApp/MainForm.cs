@@ -91,10 +91,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
             var config = await Settings.LoadConfigAsync();
             if (string.IsNullOrEmpty(config.ObsPassword))
             {
-                await WriteStatusLabelAsync("Cannot connect to OBS because no password is defined.");
+                WriteStatusLabel("Cannot connect to OBS because no password is defined.");
                 return;
             }
-            _obs.ConnectAsync($"ws://localhost:{config.ObsPort}", config.ObsPassword);
+            var address = $"ws://localhost:{config.ObsPort}";
+            WriteStatusLabel($"Trying to connect to OBS at '{address}'...");
+            _obs.ConnectAsync(address, config.ObsPassword);
         }
 
         private void ExitObsenceContextCommand_Click(object sender, EventArgs e)
@@ -217,28 +219,45 @@ namespace codingfreaks.obscene.Ui.FormsApp
                     var sceneLogic = new SceneLogic(_settings);
                     while (!token.IsCancellationRequested)
                     {
-                        if (_sceneQueue.TryDequeue(out var sceneName))
+                        if (!_obs?.IsConnected ?? true)
                         {
-                            if (!_settings.Scenes.ContainsKey(sceneName))
+                            if (!LastConnectionStateChangeHandled)
                             {
-                                WriteStatusLabel($"Unknown scene {sceneName} selected in OBS.");
-                                sceneLogic.Clear();
-                                continue;
+                                if (sceneLogic.CurrentScene != null)
+                                {
+                                    sceneLogic.Clear();
+                                }
+                                LastConnectionStateChangeHandled = true;
                             }
-                            if (sceneLogic.CurrentScene != null && sceneLogic.CurrentScene.Name == sceneName)
+                        }
+                        else
+                        {
+                            if (_sceneQueue.TryDequeue(out var sceneName))
                             {
-                                sceneLogic.RefreshCurrentScene(_settings.Scenes[sceneLogic.CurrentScene.Name]);
-                                WriteStatusLabel($"Scene {sceneName} was refreshed.");
-                            }
-                            else
-                            {
-                                sceneLogic.Draw(sceneName);
-                                WriteStatusLabel($"obscene switched to scene {sceneName}.");
+                                if (!_settings.Scenes.ContainsKey(sceneName))
+                                {
+                                    WriteStatusLabel($"Unknown scene {sceneName} selected in OBS.");
+                                    sceneLogic.Clear();
+                                    continue;
+                                }
+                                if (sceneLogic.CurrentScene != null && sceneLogic.CurrentScene.Name == sceneName)
+                                {
+                                    sceneLogic.RefreshCurrentScene(_settings.Scenes[sceneLogic.CurrentScene.Name]);
+                                    WriteStatusLabel($"Scene {sceneName} was refreshed.");
+                                }
+                                else
+                                {
+                                    sceneLogic.Draw(sceneName);
+                                    WriteStatusLabel($"obscene switched to scene {sceneName}.");
+                                }
                             }
                         }
                         try
                         {
-                            Task.Delay(20, token)
+                            WaitForObsToComeAlive()
+                                .GetAwaiter()
+                                .GetResult();
+                            Task.Delay(200, token)
                                 .GetAwaiter()
                                 .GetResult();
                         }
@@ -252,6 +271,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _obs = new OBSWebsocket();
             _obs.Connected += (sender, _) =>
             {
+                LastConnectionStateChangeHandled = false;
                 var senderObs = sender as OBSWebsocket;
                 if (senderObs == null)
                 {
@@ -264,6 +284,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             };
             _obs.Disconnected += (_, _) =>
             {
+                LastConnectionStateChangeHandled = false;
+                WriteCurrentSceneName(string.Empty);
                 WriteStatusLabel("Disconnected from OBS.");
             };
             _obs.CurrentProgramSceneChanged += (_, args) =>
@@ -274,6 +296,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             };
             await WriteStatusLabelAsync("Connecting to OBS...");
             await ConnectObsAsync();
+            ReconnectObsToolStripButton.Enabled = true;
         }
 
         /// <summary>
@@ -301,9 +324,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _formClosingCalled = true;
-            _cancellationTokenSource.Cancel();
-            _obs?.Disconnect();
-            _queueWatcher?.Dispose();
+            try
+            {
+                _cancellationTokenSource.Cancel();
+                _obs?.Disconnect();
+                _queueWatcher?.Dispose();
+            }
+            catch
+            {
+                // we really cannot to anything here
+            }
         }
 
         private async void MainForm_Load(object sender, EventArgs e)
@@ -348,6 +378,11 @@ namespace codingfreaks.obscene.Ui.FormsApp
         {
             WindowState = FormWindowState.Normal;
             ShowInTaskbar = true;
+        }
+
+        private async void ReconnectObsToolStripButton_Click(object sender, EventArgs e)
+        {
+            await ConnectObsAsync();
         }
 
         private async Task SaveSettingsAsync()
@@ -426,6 +461,14 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TopMost = TopMostToolStripCheck.Checked;
         }
 
+        private async Task WaitForObsToComeAlive()
+        {
+            while (!_obs?.IsConnected ?? true)
+            {
+                await Task.Delay(1000);
+            }
+        }
+
         private void WriteCurrentSceneName(string sceneName)
         {
             Invoke(() =>
@@ -481,6 +524,15 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 StatusBarLabel.Text = labelText;
             });
         }
+
+        #endregion
+
+        #region properties
+
+        /// <summary>
+        /// Indicates if the last OBS connection state change was handled or not.
+        /// </summary>
+        private static bool LastConnectionStateChangeHandled { get; set; }
 
         #endregion
     }
