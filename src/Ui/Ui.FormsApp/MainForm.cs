@@ -77,6 +77,26 @@ namespace codingfreaks.obscene.Ui.FormsApp
             GeometryProperties.SelectedObject = e.Node.Tag;
         }
 
+        /// <summary>
+        /// Tries to connect to OBS.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">Is thrown if this is called before <see cref="InitObsAsync" />.</exception>
+        private async Task ConnectObsAsync()
+        {
+            if (_obs == null)
+            {
+                throw new InvalidOperationException("OBS is not initialized.");
+            }
+            var config = await Settings.LoadConfigAsync();
+            if (string.IsNullOrEmpty(config.ObsPassword))
+            {
+                await WriteStatusLabelAsync("Cannot connect to OBS because no password is defined.");
+                return;
+            }
+            _obs.ConnectAsync($"ws://localhost:{config.ObsPort}", config.ObsPassword);
+        }
+
         private void ExitObsenceContextCommand_Click(object sender, EventArgs e)
         {
             Close();
@@ -87,6 +107,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Close();
         }
 
+        /// <summary>
+        /// Ensures that all scenes are filled in the UI.
+        /// </summary>
         private void FillConfigScenes()
         {
             if (_settings == null)
@@ -250,17 +273,13 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 _sceneQueue.Enqueue(args.SceneName);
             };
             await WriteStatusLabelAsync("Connecting to OBS...");
-            // TODO Get this from settings
-            _obs.ConnectAsync(
-                "ws://localhost:4455",
-                Environment.GetEnvironmentVariable("Obs:Password")
-                ?? Environment.GetEnvironmentVariable("OBS_PASSWORD"));
+            await ConnectObsAsync();
         }
 
         /// <summary>
         /// Loads the configuration from a file.
         /// </summary>
-        private async Task LoadConfigAsync()
+        private async Task LoadSettingsAsync()
         {
             _settings = await Settings.LoadAsync()
                 .ConfigureAwait(false);
@@ -290,7 +309,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private async void MainForm_Load(object sender, EventArgs e)
         {
             await InvokeAsync(SuspendLayout);
-            await LoadConfigAsync();
+            await LoadSettingsAsync();
             await InitObsAsync();
             await FillObsScenesAsync();
             CheckActiveColorModelToolstripItem();
@@ -331,7 +350,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ShowInTaskbar = true;
         }
 
-        private async Task SaveConfigAsync()
+        private async Task SaveSettingsAsync()
         {
             if (_settings == null)
             {
@@ -347,10 +366,10 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private async void SaveToolStripButton_Click(object sender, EventArgs e)
         {
-            await SaveConfigAsync();
+            await SaveSettingsAsync();
         }
 
-        private async void SetColorMode(object sender, EventArgs e)
+        private void SetColorMode(object sender, EventArgs e)
         {
             // NOTE: We need to sync this with whatever is currently selected
             var toolstrip = sender as ToolStripMenuItem;
@@ -392,7 +411,14 @@ namespace codingfreaks.obscene.Ui.FormsApp
             {
                 StartPosition = FormStartPosition.CenterParent
             };
-            await settingsForm.ShowDialogAsync();
+            var result = await settingsForm.ShowDialogAsync();
+            if (result == DialogResult.OK)
+            {
+                WriteStatusLabel("Reconnecting to OBS...");
+                _obs!.Disconnect();
+                await FillObsScenesAsync();
+                await ConnectObsAsync();
+            }
         }
 
         private void TopMostToolStripCheck_CheckStateChanged(object sender, EventArgs e)

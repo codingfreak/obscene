@@ -13,6 +13,16 @@ namespace codingfreaks.obscene.Logic.Abstracts.Models
         public string SettingsPath { get; set; } = null!;
 
         /// <summary>
+        /// The UDP port on which to connect to OBS.
+        /// </summary>
+        public int ObsPort { get; set; } = 4455;
+
+        /// <summary>
+        /// The password to connect to OBS.
+        /// </summary>
+        public string? ObsPassword { get; set; }
+
+        /// <summary>
         /// Retrieves the default app configuration.
         /// </summary>
         public static AppConfig Default =>

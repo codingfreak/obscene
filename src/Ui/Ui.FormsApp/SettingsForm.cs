@@ -25,6 +25,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private async void OkButton_Click(object sender, EventArgs e)
         {
             _config!.SettingsPath = SettingsFolderText.Text;
+            _config.ObsPort = (int)ObsPortNumeric.Value;
+            _config.ObsPassword = ObsPasswordText.Text;
             await Settings.SaveConfigAsync(_config);
         }
 
@@ -38,10 +40,11 @@ namespace codingfreaks.obscene.Ui.FormsApp
             }
         }
 
-        private void SettingsFolderText_TextChanged(object sender, EventArgs e)
+        private void OnControlValueChanged(object sender, EventArgs e)
         {
-            var ok = Directory.Exists(SettingsFolderText.Text);
-            SettingsFolderText.ForeColor = ok ? ForeColor : Color.Red;
+            var pathOk = Directory.Exists(SettingsFolderText.Text);
+            var ok = pathOk  && ObsPasswordText.TextLength > 0;
+            SettingsFolderText.ForeColor = pathOk ? ForeColor : Color.Red;
             OkButton.Enabled = ok;
         }
 
@@ -49,6 +52,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
         {
             _config = await Settings.LoadConfigAsync();
             SettingsFolderText.Text = _config.SettingsPath;
+            ObsPortNumeric.Value = _config.ObsPort;
+            ObsPasswordText.Text = _config.ObsPassword;
         }
 
         #endregion
