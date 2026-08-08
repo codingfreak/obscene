@@ -23,10 +23,10 @@
         <Content Include="..\..\..\assets\png\settings.png" Link="icons\settings.png" />
         <Content Include="..\..\..\assets\png\topmost.png" Link="icons\topmost.png" />
         <Content Include="configs\backup.json">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </Content>
         <Content Include="configs\my.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </Content>
         <Content Include="obscene.ico" />
     </ItemGroup>

@@ -23,6 +23,11 @@ namespace codingfreaks.obscene.Logic.Abstracts.Models
         public string? ObsPassword { get; set; }
 
         /// <summary>
+        /// Controls if the app is shown in the tray only.
+        /// </summary>
+        public bool StartInTray { get; set; }
+
+        /// <summary>
         /// Retrieves the default app configuration.
         /// </summary>
         public static AppConfig Default =>

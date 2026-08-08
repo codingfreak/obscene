@@ -27,7 +27,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _config!.SettingsPath = SettingsFolderText.Text;
             _config.ObsPort = (int)ObsPortNumeric.Value;
             _config.ObsPassword = ObsPasswordText.Text;
+            _config.StartInTray = TrayStartCheckbox.Checked;
             await Settings.SaveConfigAsync(_config);
+        }
+
+        private void OnControlValueChanged(object sender, EventArgs e)
+        {
+            var pathOk = Directory.Exists(SettingsFolderText.Text);
+            var ok = pathOk && ObsPasswordText.TextLength > 0;
+            SettingsFolderText.ForeColor = pathOk ? ForeColor : Color.Red;
+            OkButton.Enabled = ok;
         }
 
         private void SettingsFolderButton_Click(object sender, EventArgs e)
@@ -40,20 +49,20 @@ namespace codingfreaks.obscene.Ui.FormsApp
             }
         }
 
-        private void OnControlValueChanged(object sender, EventArgs e)
-        {
-            var pathOk = Directory.Exists(SettingsFolderText.Text);
-            var ok = pathOk  && ObsPasswordText.TextLength > 0;
-            SettingsFolderText.ForeColor = pathOk ? ForeColor : Color.Red;
-            OkButton.Enabled = ok;
-        }
-
         private async void SettingsForm_Load(object sender, EventArgs e)
         {
+            ObsHintText.BackColor = BackColor;
             _config = await Settings.LoadConfigAsync();
             SettingsFolderText.Text = _config.SettingsPath;
             ObsPortNumeric.Value = _config.ObsPort;
             ObsPasswordText.Text = _config.ObsPassword;
+            TrayStartCheckbox.Checked = _config.StartInTray;
+            WindowsStartCheckbox.Checked = Settings.GetIsAutostartEnabled();
+        }
+
+        private void WindowsStartCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.SetAutostart(WindowsStartCheckbox.Checked);
         }
 
         #endregion

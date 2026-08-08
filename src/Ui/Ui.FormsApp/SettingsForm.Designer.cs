@@ -37,20 +37,25 @@ namespace codingfreaks.obscene.Ui.FormsApp
             SettingsFolderText = new TextBox();
             FolderDialog = new FolderBrowserDialog();
             groupBox2 = new GroupBox();
+            ObsHintText = new TextBox();
             ObsPasswordText = new TextBox();
             ObsPortNumeric = new NumericUpDown();
             label3 = new Label();
             label2 = new Label();
+            groupBox3 = new GroupBox();
+            WindowsStartCheckbox = new CheckBox();
+            TrayStartCheckbox = new CheckBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ObsPortNumeric).BeginInit();
+            groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // AbortButton
             // 
             AbortButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             AbortButton.DialogResult = DialogResult.Cancel;
-            AbortButton.Location = new Point(320, 183);
+            AbortButton.Location = new Point(320, 242);
             AbortButton.Name = "AbortButton";
             AbortButton.Size = new Size(102, 36);
             AbortButton.TabIndex = 0;
@@ -62,7 +67,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             OkButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             OkButton.DialogResult = DialogResult.OK;
             OkButton.Enabled = false;
-            OkButton.Location = new Point(212, 183);
+            OkButton.Location = new Point(212, 242);
             OkButton.Name = "OkButton";
             OkButton.Size = new Size(102, 36);
             OkButton.TabIndex = 1;
@@ -78,7 +83,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             groupBox1.Controls.Add(SettingsFolderText);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(410, 69);
+            groupBox1.Size = new Size(410, 67);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Settings Directory";
@@ -109,23 +114,39 @@ namespace codingfreaks.obscene.Ui.FormsApp
             SettingsFolderText.Location = new Point(6, 39);
             SettingsFolderText.Multiline = true;
             SettingsFolderText.Name = "SettingsFolderText";
-            SettingsFolderText.Size = new Size(360, 24);
+            SettingsFolderText.Size = new Size(360, 22);
             SettingsFolderText.TabIndex = 0;
             SettingsFolderText.TextChanged += OnControlValueChanged;
             // 
             // groupBox2
             // 
             groupBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox2.Controls.Add(ObsHintText);
             groupBox2.Controls.Add(ObsPasswordText);
             groupBox2.Controls.Add(ObsPortNumeric);
             groupBox2.Controls.Add(label3);
             groupBox2.Controls.Add(label2);
-            groupBox2.Location = new Point(12, 87);
+            groupBox2.Location = new Point(12, 85);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(410, 89);
+            groupBox2.Size = new Size(410, 76);
             groupBox2.TabIndex = 3;
             groupBox2.TabStop = false;
             groupBox2.Text = "OBS";
+            // 
+            // ObsHintText
+            // 
+            ObsHintText.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            ObsHintText.BorderStyle = BorderStyle.None;
+            ObsHintText.CausesValidation = false;
+            ObsHintText.HideSelection = false;
+            ObsHintText.Location = new Point(200, 17);
+            ObsHintText.Multiline = true;
+            ObsHintText.Name = "ObsHintText";
+            ObsHintText.ReadOnly = true;
+            ObsHintText.Size = new Size(204, 53);
+            ObsHintText.TabIndex = 4;
+            ObsHintText.TabStop = false;
+            ObsHintText.Text = "Open OBS and then select Tools -> WebSocker Server Settings to obtain these values.";
             // 
             // ObsPasswordText
             // 
@@ -163,12 +184,46 @@ namespace codingfreaks.obscene.Ui.FormsApp
             label2.TabIndex = 0;
             label2.Text = "Port:";
             // 
+            // groupBox3
+            // 
+            groupBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox3.Controls.Add(TrayStartCheckbox);
+            groupBox3.Controls.Add(WindowsStartCheckbox);
+            groupBox3.Location = new Point(12, 167);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(410, 69);
+            groupBox3.TabIndex = 4;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Startup";
+            // 
+            // WindowsStartCheckbox
+            // 
+            WindowsStartCheckbox.AutoSize = true;
+            WindowsStartCheckbox.Location = new Point(6, 22);
+            WindowsStartCheckbox.Name = "WindowsStartCheckbox";
+            WindowsStartCheckbox.Size = new Size(128, 19);
+            WindowsStartCheckbox.TabIndex = 0;
+            WindowsStartCheckbox.Text = "Start with Windows";
+            WindowsStartCheckbox.UseVisualStyleBackColor = true;
+            WindowsStartCheckbox.CheckedChanged += WindowsStartCheckbox_CheckedChanged;
+            // 
+            // TrayStartCheckbox
+            // 
+            TrayStartCheckbox.AutoSize = true;
+            TrayStartCheckbox.Location = new Point(6, 47);
+            TrayStartCheckbox.Name = "TrayStartCheckbox";
+            TrayStartCheckbox.Size = new Size(88, 19);
+            TrayStartCheckbox.TabIndex = 1;
+            TrayStartCheckbox.Text = "Start in Tray";
+            TrayStartCheckbox.UseVisualStyleBackColor = true;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = AbortButton;
-            ClientSize = new Size(434, 231);
+            ClientSize = new Size(434, 290);
+            Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(OkButton);
@@ -176,7 +231,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(450, 270);
+            MinimumSize = new Size(450, 254);
             Name = "SettingsForm";
             Text = "obscene Settings";
             Load += SettingsForm_Load;
@@ -185,6 +240,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)ObsPortNumeric).EndInit();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -202,5 +259,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private NumericUpDown ObsPortNumeric;
         private Label label3;
         private Label label2;
+        private TextBox ObsHintText;
+        private GroupBox groupBox3;
+        private CheckBox TrayStartCheckbox;
+        private CheckBox WindowsStartCheckbox;
     }
 }

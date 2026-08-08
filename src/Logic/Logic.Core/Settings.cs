@@ -6,6 +6,8 @@ namespace codingfreaks.obscene.Logic.Core
 
     using Extensions;
 
+    using Microsoft.Win32;
+
     /// <summary>
     /// Represents the root element structure of the obscene settings.
     /// </summary>
@@ -16,13 +18,26 @@ namespace codingfreaks.obscene.Logic.Core
         /// <summary>
         /// The name of the config file.
         /// </summary>
-        private const string AppConfigFileName = "obscene.config";
+        public static readonly string AppConfigFileName = "obscene.config";
+
+        /// <summary>
+        /// The name of the app.
+        /// </summary>
+        private const string AppName = "obscene";
 
         /// <summary>
         /// The name of the settings file.
         /// </summary>
         private const string AppSettingsFileName = "obscene.json";
 
+        /// <summary>
+        /// The registry key under which to configure the auto-start.
+        /// </summary>
+        private const string AutoStartRegistryKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
+
+        /// <summary>
+        /// The default JSON serializer options to use.
+        /// </summary>
         private static readonly JsonSerializerOptions JsonSerializerOptions = new()
         {
             PropertyNameCaseInsensitive = false,
@@ -36,10 +51,25 @@ namespace codingfreaks.obscene.Logic.Core
         /// <summary>
         /// The path where the settings should be stored at and loaded from.
         /// </summary>
-        public static async ValueTask<string> GetSettingsPathAsync()
+        public static async ValueTask<string> GetConfigPathAsync()
         {
             var config = await LoadConfigAsync();
             return Path.Combine(config.SettingsPath, AppSettingsFileName);
+        }
+
+        /// <summary>
+        /// Retrieves if the current application is configured in auto-start.
+        /// </summary>
+        /// <returns><c>true</c> if auto-start is enabled, otherwise <c>false</c>.</returns>
+        public static bool GetIsAutostartEnabled()
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(AutoStartRegistryKey, false))
+            {
+                return key?.GetValue(AppName) is string v && string.Equals(
+                    v,
+                    Environment.ProcessPath!,
+                    StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         /// <summary>
@@ -50,10 +80,10 @@ namespace codingfreaks.obscene.Logic.Core
         /// <exception cref="InvalidOperationException">Is trown if the deserialization fails.</exception>
         public static async ValueTask<Settings> LoadAsync()
         {
-            var filePath = await GetSettingsPathAsync();
+            var filePath = await GetConfigPathAsync();
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException(filePath);
+                return new Settings();
             }
             var json = await File.ReadAllTextAsync(filePath);
             var data = JsonSerializer.Deserialize<SettingsData>(json, JsonSerializerOptions)
@@ -93,7 +123,7 @@ namespace codingfreaks.obscene.Logic.Core
         {
             var data = this.ToSettingsData();
             var json = JsonSerializer.Serialize(data, JsonSerializerOptions);
-            var path = await GetSettingsPathAsync();
+            var path = await GetConfigPathAsync();
             await File.WriteAllTextAsync(path, json);
         }
 
@@ -107,7 +137,7 @@ namespace codingfreaks.obscene.Logic.Core
             var currentConfig = await LoadConfigAsync();
             if (currentConfig.SettingsPath != newConfig.SettingsPath)
             {
-                var currentSetttingsFile = await GetSettingsPathAsync();
+                var currentSetttingsFile = await GetConfigPathAsync();
                 if (File.Exists(currentSetttingsFile))
                 {
                     // We need to move any existing newConfig to the new location
@@ -117,6 +147,25 @@ namespace codingfreaks.obscene.Logic.Core
             }
             var content = JsonSerializer.Serialize(newConfig);
             await File.WriteAllTextAsync(AppConfigFileName, content);
+        }
+
+        /// <summary>
+        /// Configures the auto-start for the current application.
+        /// </summary>
+        /// <param name="enable"><c>true</c> if it should be enabled, <c>false</c> if it should be disabled.</param>
+        public static void SetAutostart(bool enable)
+        {
+            using (var key = Registry.CurrentUser.OpenSubKey(AutoStartRegistryKey, true) ?? Registry.CurrentUser.CreateSubKey(AutoStartRegistryKey))
+            {
+                if (enable)
+                {
+                    key.SetValue(AppName, Environment.ProcessPath!, RegistryValueKind.String);
+                }
+                else
+                {
+                    key.DeleteValue(AppName, false);
+                }
+            }
         }
 
         #endregion

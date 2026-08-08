@@ -48,8 +48,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 switch ((int)m.WParam)
                 {
                     case WinApiConstants.HTCLOSE:
-                        WindowState = FormWindowState.Minimized;
-                        ShowInTaskbar = false;
+                        PutWindowToTray();
                         break;
                 }
             }
@@ -345,6 +344,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
             CheckActiveColorModelToolstripItem();
             GeometryHintLabel.Dock = DockStyle.Fill;
             GeometryHintLabel.Visible = true;
+            if (!File.Exists(Settings.AppConfigFileName))
+            {
+                await OpenConfigDialogAsync();
+            }
+            var config = await Settings.LoadConfigAsync();
+            if (!config.StartInTray)
+            {
+                RestoreWindowFromTray();
+            }
+            Visible = true;
             await InvokeAsync(() => ResumeLayout(true));
         }
 
@@ -374,15 +383,60 @@ namespace codingfreaks.obscene.Ui.FormsApp
             HighlightCurrentScene();
         }
 
+        /// <summary>
+        /// Opens the configuration dialog and handles its result.
+        /// </summary>
+        private async Task OpenConfigDialogAsync()
+        {
+            if (TopMost)
+            {
+                MessageBox.Show(
+                    "Cannot open settings when Top Most is enabled.",
+                    "Settings not available",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+            var settingsForm = new SettingsForm
+            {
+                StartPosition = FormStartPosition.CenterParent
+            };
+            var result = await settingsForm.ShowDialogAsync();
+            if (result == DialogResult.OK)
+            {
+                WriteStatusLabel("Reconnecting to OBS...");
+                _obs!.Disconnect();
+                FillConfigScenes();
+                await FillObsScenesAsync();
+                await ConnectObsAsync();
+            }
+        }
+
         private void OpenObsceneContextCommand_Click(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
+            RestoreWindowFromTray();
+        }
+
+        /// <summary>
+        /// Makes this window invisible.
+        /// </summary>
+        private void PutWindowToTray()
+        {
+            WindowState = FormWindowState.Minimized;
+            ShowInTaskbar = false;
         }
 
         private async void ReconnectObsToolStripButton_Click(object sender, EventArgs e)
         {
             await ConnectObsAsync();
+        }
+
+        /// <summary>
+        /// </summary>
+        private void RestoreWindowFromTray()
+        {
+            WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
         }
 
         private async Task SaveSettingsAsync()
@@ -404,12 +458,19 @@ namespace codingfreaks.obscene.Ui.FormsApp
             await SaveSettingsAsync();
         }
 
+        /// <summary>
+        /// Reacts to the dark/light switch.
+        /// </summary>
+        /// <param name="sender">The control which triggered the event.</param>
+        /// <param name="e">The event arguments.</param>
+        /// <exception cref="InvalidOperationException">Is thrown if the sender is not a ToolStripMenuItem.</exception>
         private void SetColorMode(object sender, EventArgs e)
         {
             // NOTE: We need to sync this with whatever is currently selected
             var toolstrip = sender as ToolStripMenuItem;
             if (toolstrip == null)
             {
+                // this should never happen!
                 throw new InvalidOperationException("Unkown sender.");
             }
             var text = toolstrip.Name!;
@@ -421,39 +482,12 @@ namespace codingfreaks.obscene.Ui.FormsApp
             {
                 Application.SetColorMode(SystemColorMode.Classic);
             }
-            // Put the form in invisible mode and bring it up again to try to refresh the colors
-            WindowState = FormWindowState.Minimized;
-            ShowInTaskbar = false;
-            // TODO This is not working relyable sadly
-            Refresh();
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = false;
             CheckActiveColorModelToolstripItem();
         }
 
         private async void SettingsToolStripDropDown_Click(object sender, EventArgs e)
         {
-            if (TopMost)
-            {
-                MessageBox.Show(
-                    "Cannot open settings when Top Most is enabled.",
-                    "Settings not available",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                return;
-            }
-            var settingsForm = new SettingsForm
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
-            var result = await settingsForm.ShowDialogAsync();
-            if (result == DialogResult.OK)
-            {
-                WriteStatusLabel("Reconnecting to OBS...");
-                _obs!.Disconnect();
-                await FillObsScenesAsync();
-                await ConnectObsAsync();
-            }
+            await OpenConfigDialogAsync();
         }
 
         private void TopMostToolStripCheck_CheckStateChanged(object sender, EventArgs e)

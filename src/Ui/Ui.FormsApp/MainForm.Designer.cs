@@ -28,6 +28,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
         /// </summary>
         private void InitializeComponent()
         {
+            Visible = false;
+            WindowState = FormWindowState.Minimized;
+            ShowInTaskbar = false;
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
