@@ -379,6 +379,15 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private async void SettingsToolStripDropDown_Click(object sender, EventArgs e)
         {
+            if (TopMost)
+            {
+                MessageBox.Show(
+                    "Cannot open settings when Top Most is enabled.",
+                    "Settings not available",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
             var settingsForm = new SettingsForm
             {
                 StartPosition = FormStartPosition.CenterParent
