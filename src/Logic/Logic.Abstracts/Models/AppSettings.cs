@@ -1,4 +1,4 @@
-namespace codingfreaks.obscene.Logic.Core
+namespace codingfreaks.obscene.Logic.Abstracts.Models
 {
     using System.Drawing;
 

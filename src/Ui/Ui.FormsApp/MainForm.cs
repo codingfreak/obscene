@@ -262,7 +262,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
         /// </summary>
         private async Task LoadConfigAsync()
         {
-            _settings = await Settings.LoadAsync(SettingsPath)
+            _settings = await Settings.LoadAsync()
                 .ConfigureAwait(false);
             // apply app settings
             await InvokeAsync(() =>
@@ -341,7 +341,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _settings.AppSettings.MainFormSize = Size;
             _settings.AppSettings.TopMost = TopMost;
             _settings.AppSettings.IsDarkMode = ColorModeDarkItem.Checked;
-            await _settings.SaveAsync(SettingsPath);
+            await _settings.SaveAsync();
             WriteStatusLabel("Settings saved.");
         }
 
@@ -446,19 +446,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 StatusBarLabel.Text = labelText;
             });
         }
-
-        #endregion
-
-        #region properties
-
-        /// <summary>
-        /// The path where the settings should be stored at and loaded from.
-        /// </summary>
-        /// <remarks>
-        /// TODO: This needs to be checked.
-        /// </remarks>
-        private static string SettingsPath =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "obscene.json");
 
         #endregion
     }

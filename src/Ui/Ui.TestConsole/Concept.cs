@@ -98,7 +98,7 @@ namespace codingfreaks.obscene.Ui.TestConsole
         {
             // try to load from default dir
             var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configs", "my.json");
-            var settings = await Settings.LoadAsync(settingsPath);
+            var settings = await Settings.LoadAsync();
             var logic = new SceneLogic(settings);
             logic.Draw("1080 BottomRight");
             var run = true;
@@ -126,7 +126,7 @@ namespace codingfreaks.obscene.Ui.TestConsole
         public static void RunbObsConnectionDemo()
         {
             var settingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "configs", "my.json");
-            var settings = Settings.LoadAsync(settingsPath).GetAwaiter().GetResult();
+            var settings = Settings.LoadAsync().GetAwaiter().GetResult();
             Console.WriteLine("Settings loaded.");
             var cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
