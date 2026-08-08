@@ -28,9 +28,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
         /// </summary>
         private void InitializeComponent()
         {
-            Visible = false;
-            WindowState = FormWindowState.Minimized;
-            ShowInTaskbar = false;
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             groupBox1 = new GroupBox();
@@ -71,6 +68,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             SettingsToolStripDropDown = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             ReconnectObsToolStripButton = new ToolStripButton();
+            toolStripSeparator6 = new ToolStripSeparator();
+            DrawingEnabledToolStripCheck = new ToolStripButton();
+            toolStripSeparator7 = new ToolStripSeparator();
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
@@ -215,6 +215,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             ColorModeContextMenu.Items.AddRange(new ToolStripItem[] { ColorModeDarkItem, ColorModeLightItem });
             ColorModeContextMenu.Name = "ColorModeContextMenu";
+            ColorModeContextMenu.OwnerItem = ColorModeToolStripDropDown;
             ColorModeContextMenu.Size = new Size(102, 48);
             // 
             // ColorModeDarkItem
@@ -322,7 +323,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // MainToolStrip
             // 
-            MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, ColorModeToolStripDropDown, toolStripSeparator4, SettingsToolStripDropDown, toolStripSeparator5, ReconnectObsToolStripButton });
+            MainToolStrip.Items.AddRange(new ToolStripItem[] { LoadToolStripButton, SaveToolStripButton, ToolStripSep1, ExitToolStripButton, toolStripSeparator3, TopMostToolStripCheck, toolStripSeparator7, DrawingEnabledToolStripCheck, toolStripSeparator6, ColorModeToolStripDropDown, toolStripSeparator4, SettingsToolStripDropDown, toolStripSeparator5, ReconnectObsToolStripButton });
             MainToolStrip.Location = new Point(0, 0);
             MainToolStrip.Name = "MainToolStrip";
             MainToolStrip.Size = new Size(490, 25);
@@ -412,6 +413,27 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ReconnectObsToolStripButton.ToolTipText = "Reconnect to OBS";
             ReconnectObsToolStripButton.Click += ReconnectObsToolStripButton_Click;
             // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(6, 25);
+            // 
+            // DrawingEnabledToolStripCheck
+            // 
+            DrawingEnabledToolStripCheck.CheckOnClick = true;
+            DrawingEnabledToolStripCheck.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            DrawingEnabledToolStripCheck.Image = (Image)resources.GetObject("DrawingEnabledToolStripCheck.Image");
+            DrawingEnabledToolStripCheck.ImageTransparentColor = Color.Magenta;
+            DrawingEnabledToolStripCheck.Name = "DrawingEnabledToolStripCheck";
+            DrawingEnabledToolStripCheck.Size = new Size(23, 22);
+            DrawingEnabledToolStripCheck.ToolTipText = "Enable/Disable masks";
+            DrawingEnabledToolStripCheck.CheckStateChanged += DrawingEnabledToolStripCheck_CheckStateChanged;
+            // 
+            // toolStripSeparator7
+            // 
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(6, 25);
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -426,7 +448,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             MinimizeBox = false;
             MinimumSize = new Size(500, 600);
             Name = "MainForm";
+            ShowInTaskbar = false;
             Text = "obscene";
+            WindowState = FormWindowState.Minimized;
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             groupBox1.ResumeLayout(false);
@@ -486,5 +510,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ToolStripButton SettingsToolStripDropDown;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripButton ReconnectObsToolStripButton;
+        private ToolStripSeparator toolStripSeparator7;
+        private ToolStripButton DrawingEnabledToolStripCheck;
+        private ToolStripSeparator toolStripSeparator6;
     }
 }

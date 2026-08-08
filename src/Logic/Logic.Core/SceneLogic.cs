@@ -1,7 +1,5 @@
 namespace codingfreaks.obscene.Logic.Core
 {
-    using Abstracts.Models;
-
     /// <summary>
     /// Central logic to handle all screen drawings during the program runtime.
     /// </summary>
@@ -35,7 +33,6 @@ namespace codingfreaks.obscene.Logic.Core
             {
                 geo.Dispose();
             }
-            CurrentScene.Geometries.Clear();
             CurrentScene = null;
         }
 
@@ -58,6 +55,8 @@ namespace codingfreaks.obscene.Logic.Core
             }
         }
 
+        #endregion
+
         /// <summary>
         /// Refreshes all geometries of the current scene.
         /// </summary>
@@ -72,8 +71,6 @@ namespace codingfreaks.obscene.Logic.Core
         //        geo.Refresh();
         //    }
         //}
-
-        #endregion
 
         #region properties
 
@@ -111,6 +108,7 @@ namespace codingfreaks.obscene.Logic.Core
                 geo.Refresh();
             }
 
-        #endregion
+            #endregion
+        }
     }
-}}
+}

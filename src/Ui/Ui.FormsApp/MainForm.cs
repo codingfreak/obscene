@@ -25,6 +25,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private Dictionary<string, ObsSceneSettings>? _obsSettings;
         private Task? _queueWatcher;
 
+        private SceneLogic? _sceneLogic;
+
         private Settings? _settings;
 
         #endregion
@@ -96,6 +98,11 @@ namespace codingfreaks.obscene.Ui.FormsApp
             var address = $"ws://localhost:{config.ObsPort}";
             WriteStatusLabel($"Trying to connect to OBS at '{address}'...");
             _obs.ConnectAsync(address, config.ObsPassword);
+        }
+
+        private void DrawingEnabledToolStripCheck_CheckStateChanged(object sender, EventArgs e)
+        {
+            DrawingEnabled = DrawingEnabledToolStripCheck.Checked;
         }
 
         private void ExitObsenceContextCommand_Click(object sender, EventArgs e)
@@ -201,6 +208,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             });
         }
 
+        private string? _currentSceneToReset;
+
         /// <summary>
         /// Starts a background task which constantly syncs with changes in OBS scenes.
         /// </summary>
@@ -215,16 +224,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _queueWatcher = Task.Run(
                 () =>
                 {
-                    var sceneLogic = new SceneLogic(_settings);
+                    _sceneLogic = new SceneLogic(_settings);
                     while (!token.IsCancellationRequested)
                     {
                         if (!_obs?.IsConnected ?? true)
                         {
                             if (!LastConnectionStateChangeHandled)
                             {
-                                if (sceneLogic.CurrentScene != null)
+                                if (_sceneLogic.CurrentScene != null)
                                 {
-                                    sceneLogic.Clear();
+                                    _sceneLogic.Clear();
                                 }
                                 LastConnectionStateChangeHandled = true;
                             }
@@ -236,19 +245,45 @@ namespace codingfreaks.obscene.Ui.FormsApp
                                 if (!_settings.Scenes.ContainsKey(sceneName))
                                 {
                                     WriteStatusLabel($"Unknown scene {sceneName} selected in OBS.");
-                                    sceneLogic.Clear();
+                                    _sceneLogic.Clear();
                                     continue;
                                 }
-                                if (sceneLogic.CurrentScene != null && sceneLogic.CurrentScene.Name == sceneName)
+                                if (DrawingEnabled)
                                 {
-                                    sceneLogic.RefreshCurrentScene(_settings.Scenes[sceneLogic.CurrentScene.Name]);
-                                    WriteStatusLabel($"Scene {sceneName} was refreshed.");
+                                    if (_sceneLogic.CurrentScene != null && _sceneLogic.CurrentScene.Name == sceneName)
+                                    {
+                                        _sceneLogic.RefreshCurrentScene(
+                                            _settings.Scenes[_sceneLogic.CurrentScene.Name]);
+                                        WriteStatusLabel($"Scene {sceneName} was refreshed.");
+                                    }
+                                    else
+                                    {
+                                        _sceneLogic.Draw(sceneName);
+                                        WriteStatusLabel($"obscene switched to scene {sceneName}.");
+                                    }
                                 }
                                 else
                                 {
-                                    sceneLogic.Draw(sceneName);
-                                    WriteStatusLabel($"obscene switched to scene {sceneName}.");
+                                    _currentSceneToReset = _sceneLogic.CurrentScene?.Name;
+                                    _sceneLogic.Clear();
                                 }
+                            }
+                            if (_handleDrawingEnabled)
+                            {
+                                if (DrawingEnabled)
+                                {
+                                    if (!string.IsNullOrEmpty(_currentSceneToReset))
+                                    {
+                                        _sceneLogic.Draw(_currentSceneToReset!);
+                                        _currentSceneToReset = null;
+                                    }
+                                }
+                                else
+                                {
+                                    _currentSceneToReset = _sceneLogic.CurrentScene?.Name;
+                                    _sceneLogic.Clear();
+                                }
+                                _handleDrawingEnabled = false;
                             }
                         }
                         try
@@ -353,6 +388,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             {
                 RestoreWindowFromTray();
             }
+            DrawingEnabledToolStripCheck.Checked = DrawingEnabled;
             Visible = true;
             await InvokeAsync(() => ResumeLayout(true));
         }
@@ -513,7 +549,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
         }
 
         //private Task? _writeUpdater;
-
         /// <summary>
         /// Sets the content of the status label for the current activity to the given <paramref name="labelText" />.
         /// </summary>
@@ -566,7 +601,19 @@ namespace codingfreaks.obscene.Ui.FormsApp
         /// <summary>
         /// Indicates if the last OBS connection state change was handled or not.
         /// </summary>
-        private static bool LastConnectionStateChangeHandled { get; set; }
+        private bool LastConnectionStateChangeHandled { get; set; }
+
+        private bool _handleDrawingEnabled = false;
+
+        /// <summary>
+        /// Indicates if obsence is drawing masks to the screen.
+        /// </summary>
+        private bool DrawingEnabled { get;
+            set
+            {
+                field = value;
+                _handleDrawingEnabled = true;
+            } } = true;
 
         #endregion
     }
