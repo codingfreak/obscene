@@ -40,6 +40,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TrayIcon = new NotifyIcon(components);
             TrayContextMenu = new ContextMenuStrip(components);
             OpenObsceneContextCommand = new ToolStripMenuItem();
+            toolStripSeparator8 = new ToolStripSeparator();
+            EnableDisableContextCommand = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             ExitObsenceContextCommand = new ToolStripMenuItem();
             StatusBar = new StatusStrip();
@@ -64,13 +66,14 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ExitToolStripButton = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
             TopMostToolStripCheck = new ToolStripButton();
+            toolStripSeparator7 = new ToolStripSeparator();
+            DrawingEnabledToolStripCheck = new ToolStripButton();
+            toolStripSeparator6 = new ToolStripSeparator();
             toolStripSeparator4 = new ToolStripSeparator();
             SettingsToolStripDropDown = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             ReconnectObsToolStripButton = new ToolStripButton();
-            toolStripSeparator6 = new ToolStripSeparator();
-            DrawingEnabledToolStripCheck = new ToolStripButton();
-            toolStripSeparator7 = new ToolStripSeparator();
+            MainImageList = new ImageList(components);
             groupBox1.SuspendLayout();
             TrayContextMenu.SuspendLayout();
             StatusBar.SuspendLayout();
@@ -163,26 +166,38 @@ namespace codingfreaks.obscene.Ui.FormsApp
             // 
             // TrayContextMenu
             // 
-            TrayContextMenu.Items.AddRange(new ToolStripItem[] { OpenObsceneContextCommand, toolStripSeparator1, ExitObsenceContextCommand });
+            TrayContextMenu.Items.AddRange(new ToolStripItem[] { OpenObsceneContextCommand, toolStripSeparator8, EnableDisableContextCommand, toolStripSeparator1, ExitObsenceContextCommand });
             TrayContextMenu.Name = "TrayContextMenu";
-            TrayContextMenu.Size = new Size(104, 54);
+            TrayContextMenu.Size = new Size(113, 82);
             // 
             // OpenObsceneContextCommand
             // 
             OpenObsceneContextCommand.Name = "OpenObsceneContextCommand";
-            OpenObsceneContextCommand.Size = new Size(103, 22);
+            OpenObsceneContextCommand.Size = new Size(112, 22);
             OpenObsceneContextCommand.Text = "&Open";
             OpenObsceneContextCommand.Click += OpenObsceneContextCommand_Click;
+            // 
+            // toolStripSeparator8
+            // 
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new Size(109, 6);
+            // 
+            // EnableDisableContextCommand
+            // 
+            EnableDisableContextCommand.Name = "EnableDisableContextCommand";
+            EnableDisableContextCommand.Size = new Size(112, 22);
+            EnableDisableContextCommand.Text = "&Disable";
+            EnableDisableContextCommand.Click += EnableDisableContextCommand_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(100, 6);
+            toolStripSeparator1.Size = new Size(109, 6);
             // 
             // ExitObsenceContextCommand
             // 
             ExitObsenceContextCommand.Name = "ExitObsenceContextCommand";
-            ExitObsenceContextCommand.Size = new Size(103, 22);
+            ExitObsenceContextCommand.Size = new Size(112, 22);
             ExitObsenceContextCommand.Text = "E&xit";
             ExitObsenceContextCommand.Click += ExitObsenceContextCommand_Click;
             // 
@@ -382,6 +397,26 @@ namespace codingfreaks.obscene.Ui.FormsApp
             TopMostToolStripCheck.ToolTipText = "Stay on top";
             TopMostToolStripCheck.CheckStateChanged += TopMostToolStripCheck_CheckStateChanged;
             // 
+            // toolStripSeparator7
+            // 
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(6, 25);
+            // 
+            // DrawingEnabledToolStripCheck
+            // 
+            DrawingEnabledToolStripCheck.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            DrawingEnabledToolStripCheck.Image = (Image)resources.GetObject("DrawingEnabledToolStripCheck.Image");
+            DrawingEnabledToolStripCheck.ImageTransparentColor = Color.Magenta;
+            DrawingEnabledToolStripCheck.Name = "DrawingEnabledToolStripCheck";
+            DrawingEnabledToolStripCheck.Size = new Size(23, 22);
+            DrawingEnabledToolStripCheck.ToolTipText = "Enable/Disable masks";
+            DrawingEnabledToolStripCheck.Click += DrawingEnabledToolStripCheck_Click;
+            // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(6, 25);
+            // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
@@ -413,26 +448,23 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ReconnectObsToolStripButton.ToolTipText = "Reconnect to OBS";
             ReconnectObsToolStripButton.Click += ReconnectObsToolStripButton_Click;
             // 
-            // toolStripSeparator6
+            // MainImageList
             // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(6, 25);
-            // 
-            // DrawingEnabledToolStripCheck
-            // 
-            DrawingEnabledToolStripCheck.CheckOnClick = true;
-            DrawingEnabledToolStripCheck.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            DrawingEnabledToolStripCheck.Image = (Image)resources.GetObject("DrawingEnabledToolStripCheck.Image");
-            DrawingEnabledToolStripCheck.ImageTransparentColor = Color.Magenta;
-            DrawingEnabledToolStripCheck.Name = "DrawingEnabledToolStripCheck";
-            DrawingEnabledToolStripCheck.Size = new Size(23, 22);
-            DrawingEnabledToolStripCheck.ToolTipText = "Enable/Disable masks";
-            DrawingEnabledToolStripCheck.CheckStateChanged += DrawingEnabledToolStripCheck_CheckStateChanged;
-            // 
-            // toolStripSeparator7
-            // 
-            toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new Size(6, 25);
+            MainImageList.ColorDepth = ColorDepth.Depth32Bit;
+            MainImageList.ImageStream = (ImageListStreamer)resources.GetObject("MainImageList.ImageStream");
+            MainImageList.TransparentColor = Color.Transparent;
+            MainImageList.Images.SetKeyName(0, "IconDarkMode");
+            MainImageList.Images.SetKeyName(1, "IconExit");
+            MainImageList.Images.SetKeyName(2, "IconLightMode");
+            MainImageList.Images.SetKeyName(3, "IconLoad");
+            MainImageList.Images.SetKeyName(4, "IconLogo");
+            MainImageList.Images.SetKeyName(5, "IconLogoSquare");
+            MainImageList.Images.SetKeyName(6, "IconRefresh");
+            MainImageList.Images.SetKeyName(7, "IconSave");
+            MainImageList.Images.SetKeyName(8, "IconSettings");
+            MainImageList.Images.SetKeyName(9, "IconTopMost");
+            MainImageList.Images.SetKeyName(10, "IconPause");
+            MainImageList.Images.SetKeyName(11, "IconPlay");
             // 
             // MainForm
             // 
@@ -513,5 +545,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripButton DrawingEnabledToolStripCheck;
         private ToolStripSeparator toolStripSeparator6;
+        private ToolStripSeparator toolStripSeparator8;
+        private ToolStripMenuItem EnableDisableContextCommand;
+        private ImageList MainImageList;
     }
 }

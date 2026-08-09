@@ -1,13 +1,15 @@
 namespace codingfreaks.obscene.Ui.FormsApp
 {
-    using System.Collections.Concurrent;
-
     using Logic.Core;
     using Logic.Obs;
     using Logic.Obs.Models;
     using Logic.WinApi;
 
+    using Newtonsoft.Json.Linq;
+
     using OBSWebsocketDotNet;
+
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// The main form of the application.
@@ -100,10 +102,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _obs.ConnectAsync(address, config.ObsPassword);
         }
 
-        private void DrawingEnabledToolStripCheck_CheckStateChanged(object sender, EventArgs e)
-        {
-            DrawingEnabled = DrawingEnabledToolStripCheck.Checked;
-        }
 
         private void ExitObsenceContextCommand_Click(object sender, EventArgs e)
         {
@@ -388,7 +386,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             {
                 RestoreWindowFromTray();
             }
-            DrawingEnabledToolStripCheck.Checked = DrawingEnabled;
+            DrawingEnabledToolStripCheck.Image = MainImageList.Images["IconPause"];
             Visible = true;
             await InvokeAsync(() => ResumeLayout(true));
         }
@@ -605,15 +603,32 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private bool _handleDrawingEnabled = false;
 
+        private void EnableDisableContextCommand_Click(object sender, EventArgs e)
+        {
+            DrawingEnabled = !DrawingEnabled;
+        }
+
+        private void DrawingEnabledToolStripCheck_Click(object sender, EventArgs e)
+        {
+            DrawingEnabled = !DrawingEnabled;
+        }
+
+
+
         /// <summary>
         /// Indicates if obsence is drawing masks to the screen.
         /// </summary>
-        private bool DrawingEnabled { get;
+        private bool DrawingEnabled
+        {
+            get;
             set
             {
                 field = value;
                 _handleDrawingEnabled = true;
-            } } = true;
+                EnableDisableContextCommand.Text = value ? "&Disable" : "&Enable";
+                DrawingEnabledToolStripCheck.Image = value ? MainImageList.Images["IconPause"] : MainImageList.Images["IconPlay"];
+            }
+        } = true;
 
         #endregion
     }
