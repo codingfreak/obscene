@@ -2,6 +2,9 @@
     <Import Project="$(MSBuildThisFileDirectory)..\..\Base.props" />
     <PropertyGroup>
         <AssemblyName>obscene</AssemblyName>
+        <Company>codingfreaks</Company>
+        <Product>obscene</Product>
+        <Copyright>Copyright © codingfreaks 2026</Copyright>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0-windows</TargetFramework>
         <UseWindowsForms>true</UseWindowsForms>
@@ -9,6 +12,9 @@
         <SelfContained>True</SelfContained>
         <UserSecretsId>d700d67e-7ecb-4697-895c-ded98e79cdef</UserSecretsId>
         <ApplicationIcon>obscene.ico</ApplicationIcon>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Version>1.0.0</Version>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="..\..\..\assets\ico\obscene.ico" Link="icons\obscene.ico" />
@@ -54,8 +60,7 @@
     <ItemGroup>
       <Folder Include="icons\" />
     </ItemGroup>
-    <Target Name="SignPublish" AfterTargets="Publish"
-            Condition="'$(RuntimeIdentifier)'=='win-x64' AND '$(Configuration)'=='Release'">
+    <Target Name="SignPublish" AfterTargets="Publish" Condition="'$(RuntimeIdentifier)'=='win-x64' AND '$(Configuration)'=='Release'">
         <PropertyGroup>
             <_PublishedExe>$([MSBuild]::NormalizePath('$(PublishDir)', '$(TargetName).exe'))</_PublishedExe>
         </PropertyGroup>
@@ -65,8 +70,6 @@
         <PropertyGroup>
             <_SignToolExe>%(_SignTool.FullPath)</_SignToolExe>
         </PropertyGroup>
-        <Error Condition="'$(_SignToolExe)'==''"
-               Text="signtool.exe not found — install the Windows SDK." />
+        <Error Condition="'$(_SignToolExe)'==''" Text="signtool.exe not found — install the Windows SDK." />
         <Exec Command="&quot;$(_SignToolExe)&quot; sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /f &quot;$(SigningCert)&quot; /p &quot;$(SigningPassword)&quot; &quot;$(_PublishedExe)&quot;" />
-    </Target>
-</Project>
+    </Target></Project>
