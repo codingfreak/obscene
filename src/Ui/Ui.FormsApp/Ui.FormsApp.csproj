@@ -54,4 +54,19 @@
     <ItemGroup>
       <Folder Include="icons\" />
     </ItemGroup>
+    <Target Name="SignPublish" AfterTargets="Publish"
+            Condition="'$(RuntimeIdentifier)'=='win-x64' AND '$(Configuration)'=='Release'">
+        <PropertyGroup>
+            <_PublishedExe>$([MSBuild]::NormalizePath('$(PublishDir)', '$(TargetName).exe'))</_PublishedExe>
+        </PropertyGroup>
+        <ItemGroup>
+            <_SignTool Include="C:\Program Files (x86)\Windows Kits\10\bin\**\x64\signtool.exe" />
+        </ItemGroup>
+        <PropertyGroup>
+            <_SignToolExe>%(_SignTool.FullPath)</_SignToolExe>
+        </PropertyGroup>
+        <Error Condition="'$(_SignToolExe)'==''"
+               Text="signtool.exe not found — install the Windows SDK." />
+        <Exec Command="&quot;$(_SignToolExe)&quot; sign /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 /f &quot;$(SigningCert)&quot; /p &quot;$(SigningPassword)&quot; &quot;$(_PublishedExe)&quot;" />
+    </Target>
 </Project>
