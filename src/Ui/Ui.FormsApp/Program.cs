@@ -2,19 +2,37 @@ namespace codingfreaks.obscene.Ui.FormsApp
 {
     internal static class Program
     {
+        #region constants
+
+        private static Mutex? _singleRunMutex;
+
+        #endregion
+
         #region methods
 
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static int Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            ApplicationConfiguration.Initialize();
-            //Application.SetColorMode(SystemColorMode.Dark);
-            Application.Run(new MainForm());
+            _singleRunMutex = new Mutex(true, @"Global\codingfreaks.obscene", out var createdNew);
+            if (!createdNew)
+            {
+                MessageBox.Show("Another instance of obscene is already running.");
+                return 1;
+            }
+            _singleRunMutex.WaitOne();
+            try
+            {
+                ApplicationConfiguration.Initialize();
+                Application.Run(new MainForm());
+            }
+            finally
+            {
+                _singleRunMutex.ReleaseMutex();
+            }
+            return 0;
         }
 
         #endregion
