@@ -83,7 +83,7 @@ namespace codingfreaks.obscene.Ui.FormsApp.Editors
         #region properties
 
         /// <inheritdoc />
-        public override bool IsDropDownResizable => false;
+        public override bool IsDropDownResizable => true;
 
         #endregion
     }

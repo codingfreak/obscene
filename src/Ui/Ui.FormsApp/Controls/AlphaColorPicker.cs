@@ -5,6 +5,8 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
 
     using Editors;
 
+    using Models;
+
     /// <summary>
     /// Custom control for color picking from the property grid.
     /// </summary>
@@ -16,12 +18,7 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
     {
         #region member vars
 
-        private readonly NumericUpDown _alphaEditor = GetNumericControl();
-        private readonly NumericUpDown _blueNumericUpDown = GetNumericControl();
-        private readonly NumericUpDown _greenNumericUpDown = GetNumericControl();
-        private readonly CheckBox? _noneCheckBox;
-        private readonly NumericUpDown _redNumericUpDown = GetNumericControl();
-        private readonly TableLayoutPanel _tableLayout;
+        private bool _stopPropagation;
 
         #endregion
 
@@ -39,44 +36,8 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         public AlphaColorPicker(Color? initialValue, bool nullable, IWindowsFormsEditorService editorService)
         {
             InitializeComponent();
-            var initializeColor = initialValue ?? Color.FromArgb(255, Color.Black);
-            _alphaEditor.Value = initializeColor.A;
-            _redNumericUpDown.Value = initializeColor.R;
-            _greenNumericUpDown.Value = initializeColor.G;
-            _blueNumericUpDown.Value = initializeColor.B;
-            _tableLayout = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 2
-            };
-            if (nullable)
-            {
-                // Add the checkbox to allow the color to be null
-                _noneCheckBox = new CheckBox
-                {
-                    Text = "None",
-                    Checked = initialValue is null,
-                    AutoSize = true
-                };
-                _noneCheckBox.CheckedChanged += (_, _) => SetEnabled(!_noneCheckBox.Checked);
-                _tableLayout.Controls.Add(_noneCheckBox);
-                _tableLayout.Controls.Add(new Label());
-            }
-            AddRow("A", _alphaEditor);
-            AddRow("R", _redNumericUpDown);
-            AddRow("G", _greenNumericUpDown);
-            AddRow("B", _blueNumericUpDown);
-            // Add the ok button
-            var okButton = new Button
-            {
-                Text = "&OK",
-                Dock = DockStyle.Bottom
-            };
-            okButton.Click += (_, _) => editorService.CloseDropDown();
-            Controls.Add(_tableLayout);
-            Controls.Add(okButton);
-            // Finalize the state
-            Size = new Size(160, nullable ? 200 : 175);
+            SelectedColor = initialValue ?? Color.FromArgb(255, Color.Black);
+            NullCheckBox.Checked = initialValue is null;
             SetEnabled(!(nullable && initialValue is null));
         }
 
@@ -84,35 +45,39 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
 
         #region methods
 
-        /// <summary>
-        /// Adds a row to the table layout using a label with the <paramref name="text" /> and the provided
-        /// <paramref name="control" /> in the second column.
-        /// </summary>
-        /// <param name="text">The text of the label.</param>
-        /// <param name="control">The control.</param>
-        private void AddRow(string text, Control control)
+        private void AlphaTrack_ValueChanged(object sender, EventArgs e)
         {
-            _tableLayout.Controls.Add(
-                new Label
-                {
-                    Text = text,
-                    AutoSize = true
-                });
-            _tableLayout.Controls.Add(control);
+            if (_stopPropagation)
+            {
+                return;
+            }
+            AlphaValue.Value = AlphaTrack.Value;
         }
 
-        /// <summary>
-        /// Retrieves a fresh numeric up-down-control.
-        /// </summary>
-        /// <returns>The control to use.</returns>
-        private static NumericUpDown GetNumericControl()
+        private void ColorCircle_OnColorChanged(object sender, ColorClickedEventArgs e)
         {
-            return new NumericUpDown
+            if (_stopPropagation)
             {
-                Minimum = 0,
-                Maximum = 255,
-                Width = 60
-            };
+                return;
+            }
+            SelectedColor = Color.FromArgb(SelectedColor.A, e.Color.R, e.Color.G, e.Color.B);
+        }
+
+        private void NullCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            SetEnabled(NullCheckBox.Checked);
+        }
+
+        private void NumControl_ValueChanged(object sender, EventArgs e)
+        {
+            SelectedColor = Color.FromArgb(
+                (int)AlphaValue.Value,
+                (int)RedValue.Value,
+                (int)GreenValue.Value,
+                (int)BlueValue.Value);
+            _stopPropagation = true;
+            AlphaTrack.Value = (int)AlphaValue.Value;
+            _stopPropagation = false;
         }
 
         /// <summary>
@@ -121,14 +86,14 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         /// <param name="on"></param>
         private void SetEnabled(bool on)
         {
-            foreach (Control control in _tableLayout.Controls)
-            {
-                if (control is CheckBox)
-                {
-                    continue;
-                }
-                control.Visible = on;
-            }
+            //foreach (Control control in _tableLayout.Controls)
+            //{
+            //    if (control is CheckBox)
+            //    {
+            //        continue;
+            //    }
+            //    control.Visible = on;
+            //}
         }
 
         #endregion
@@ -138,18 +103,35 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         /// <summary>
         /// Indicates of the null-checkbox is checked.
         /// </summary>
-        public bool IsNull => _noneCheckBox?.Checked == true;
+        public bool IsNull => NullCheckBox?.Checked == true;
 
         /// <summary>
         /// The currently selected color.
         /// </summary>
-        public Color SelectedColor =>
-            Color.FromArgb(
-                (int)_alphaEditor.Value,
-                (int)_redNumericUpDown.Value,
-                (int)_greenNumericUpDown.Value,
-                (int)_blueNumericUpDown.Value);
+        [DefaultValue(typeof(Color), "Empty")]
+        public Color SelectedColor
+        {
+            get =>
+                Color.FromArgb((int)AlphaValue.Value, (int)RedValue.Value, (int)GreenValue.Value, (int)BlueValue.Value);
+            set
+            {
+                AlphaValue.Value = value.A;
+                RedValue.Value = value.R;
+                GreenValue.Value = value.G;
+                BlueValue.Value = value.B;
+                _stopPropagation = true;
+                ColorCircle.Color = value;
+                _stopPropagation = false;
+            }
+        }
 
         #endregion
+
+        //private readonly NumericUpDown AlphaValue;
+        //private readonly NumericUpDown BlueValue;
+        //private readonly NumericUpDown GreenValue;
+        //private readonly CheckBox? _noneCheckBox;
+        //private readonly NumericUpDown RedValue;
+        //private readonly TableLayoutPanel _tableLayout;
     }
 }
