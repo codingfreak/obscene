@@ -1,17 +1,16 @@
 namespace codingfreaks.obscene.Ui.FormsApp
 {
+    using System.Collections.Concurrent;
+
+    using Logic.Abstracts.Interfaces;
     using Logic.Core;
     using Logic.Obs;
     using Logic.Obs.Models;
     using Logic.WinApi;
 
-    using Newtonsoft.Json.Linq;
+    using Models;
 
     using OBSWebsocketDotNet;
-
-    using System.Collections.Concurrent;
-
-    using Models;
 
     /// <summary>
     /// The main form of the application.
@@ -23,7 +22,17 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly ConcurrentQueue<string> _sceneQueue = new();
 
+        private IGeometry? _currentGeometry;
+
+        private string? _currentSceneKey;
+
+        private string? _currentSceneToReset;
+
         private bool _formClosingCalled;
+
+        private bool _handleDrawingEnabled;
+
+        private bool _needsSettingsSave;
         private OBSWebsocket? _obs;
 
         private Dictionary<string, ObsSceneSettings>? _obsSettings;
@@ -75,11 +84,15 @@ namespace codingfreaks.obscene.Ui.FormsApp
         private void ConfigSceneTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             GeometryProperties.SelectedObject = null;
+            _currentGeometry = null;
+            _currentSceneKey = null;
             if (e.Node?.Tag == null)
             {
                 return;
             }
-            var converted = GeometryUiModel.From(e.Node.Tag);
+            _currentGeometry = e.Node.Tag as IGeometry ?? throw new InvalidOperationException("Non logical state.");
+            _currentSceneKey = e.Node.Parent!.Text;
+            var converted = GeometryUiModel.From(_currentGeometry);
             GeometryProperties.SelectedObject = converted;
         }
 
@@ -105,6 +118,15 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _obs.ConnectAsync(address, config.ObsPassword);
         }
 
+        private void DrawingEnabledToolStripCheck_Click(object sender, EventArgs e)
+        {
+            DrawingEnabled = !DrawingEnabled;
+        }
+
+        private void EnableDisableContextCommand_Click(object sender, EventArgs e)
+        {
+            DrawingEnabled = !DrawingEnabled;
+        }
 
         private void ExitObsenceContextCommand_Click(object sender, EventArgs e)
         {
@@ -171,6 +193,16 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
         private void GeometryProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
+            if (_currentGeometry == null)
+            {
+                throw new InvalidOperationException("No element selected in tree which is unexpected.");
+            }
+            var uiGeometry = GeometryProperties.SelectedObject as GeometryUiModel;
+            var geometry = _settings!.Scenes[_currentSceneKey!]
+                .Geometries.First(g => g.Id == _currentGeometry.Id);
+            uiGeometry!.ApplyTo(geometry);
+            ConfigSceneTree.SelectedNode?.Tag = uiGeometry?.ToGeometry();
+            _needsSettingsSave = true;
             if (string.IsNullOrEmpty(CurrentSceneBarLabel.Text))
             {
                 return;
@@ -208,8 +240,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 }
             });
         }
-
-        private string? _currentSceneToReset;
 
         /// <summary>
         /// Starts a background task which constantly syncs with changes in OBS scenes.
@@ -356,8 +386,25 @@ namespace codingfreaks.obscene.Ui.FormsApp
             FillConfigScenes();
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private async void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_needsSettingsSave)
+            {
+                var result = MessageBox.Show(
+                    this,
+                    "Do you want to save settings before close?",
+                    "Unsafed obscene settings",
+                    MessageBoxButtons.YesNoCancel);
+                switch (result)
+                {
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        return;
+                    case DialogResult.Yes:
+                        await SaveSettingsAsync();
+                        break;
+                }
+            }
             _formClosingCalled = true;
             try
             {
@@ -476,6 +523,9 @@ namespace codingfreaks.obscene.Ui.FormsApp
             ShowInTaskbar = true;
         }
 
+        /// <summary>
+        /// Stores all the settings and scene data.
+        /// </summary>
         private async Task SaveSettingsAsync()
         {
             if (_settings == null)
@@ -487,6 +537,7 @@ namespace codingfreaks.obscene.Ui.FormsApp
             _settings.AppSettings.TopMost = TopMost;
             _settings.AppSettings.IsDarkMode = ColorModeDarkItem.Checked;
             await _settings.SaveAsync();
+            _needsSettingsSave = false;
             WriteStatusLabel("Settings saved.");
         }
 
@@ -604,20 +655,6 @@ namespace codingfreaks.obscene.Ui.FormsApp
         /// </summary>
         private bool LastConnectionStateChangeHandled { get; set; }
 
-        private bool _handleDrawingEnabled = false;
-
-        private void EnableDisableContextCommand_Click(object sender, EventArgs e)
-        {
-            DrawingEnabled = !DrawingEnabled;
-        }
-
-        private void DrawingEnabledToolStripCheck_Click(object sender, EventArgs e)
-        {
-            DrawingEnabled = !DrawingEnabled;
-        }
-
-
-
         /// <summary>
         /// Indicates if obsence is drawing masks to the screen.
         /// </summary>
@@ -629,7 +666,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
                 field = value;
                 _handleDrawingEnabled = true;
                 EnableDisableContextCommand.Text = value ? "&Disable" : "&Enable";
-                DrawingEnabledToolStripCheck.Image = value ? MainImageList.Images["IconPause"] : MainImageList.Images["IconPlay"];
+                DrawingEnabledToolStripCheck.Image =
+                    value ? MainImageList.Images["IconPause"] : MainImageList.Images["IconPlay"];
             }
         } = true;
 
