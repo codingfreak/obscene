@@ -19,7 +19,7 @@ namespace codingfreaks.obscene.Ui.FormsApp.Editors
                 return value;
             }
             var nullable = context?.PropertyDescriptor?.PropertyType == typeof(Color?);
-            using (var picker = new AlphaColorPicker(value as Color?, nullable, svc))
+            using (var picker = new Controls.AlphaColorPicker(value as Color?, nullable, svc))
             {
                 svc.DropDownControl(picker);
                 return nullable && picker.IsNull ? null : picker.SelectedColor;

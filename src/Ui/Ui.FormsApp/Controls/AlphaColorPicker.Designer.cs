@@ -1,4 +1,4 @@
-﻿namespace codingfreaks.obscene.Ui.FormsApp.Editors
+namespace codingfreaks.obscene.Ui.FormsApp.Controls
 {
     partial class AlphaColorPicker
     {

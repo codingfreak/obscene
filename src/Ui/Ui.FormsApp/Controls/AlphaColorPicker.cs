@@ -1,7 +1,9 @@
-namespace codingfreaks.obscene.Ui.FormsApp.Editors
+namespace codingfreaks.obscene.Ui.FormsApp.Controls
 {
     using System.ComponentModel;
     using System.Windows.Forms.Design;
+
+    using Editors;
 
     /// <summary>
     /// Custom control for color picking from the property grid.
