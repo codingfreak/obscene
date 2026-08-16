@@ -11,6 +11,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
 
     using System.Collections.Concurrent;
 
+    using Models;
+
     /// <summary>
     /// The main form of the application.
     /// </summary>
@@ -77,7 +79,8 @@ namespace codingfreaks.obscene.Ui.FormsApp
             {
                 return;
             }
-            GeometryProperties.SelectedObject = e.Node.Tag;
+            var converted = GeometryUiModel.From(e.Node.Tag);
+            GeometryProperties.SelectedObject = converted;
         }
 
         /// <summary>
