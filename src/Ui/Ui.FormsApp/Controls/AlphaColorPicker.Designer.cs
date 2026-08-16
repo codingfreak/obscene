@@ -28,7 +28,7 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            groupBox1 = new GroupBox();
+            RgbGroup = new GroupBox();
             label3 = new Label();
             label2 = new Label();
             BlueValue = new NumericUpDown();
@@ -39,35 +39,35 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
             AlphaValue = new NumericUpDown();
             colorDialog1 = new ColorDialog();
             ColorCircle = new ColorCircle();
-            groupBox2 = new GroupBox();
+            AlphaGroup = new GroupBox();
             AlphaTrack = new TrackBar();
-            groupBox3 = new GroupBox();
+            WebGroup = new GroupBox();
             WebValue = new TextBox();
-            groupBox1.SuspendLayout();
+            RgbGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)BlueValue).BeginInit();
             ((System.ComponentModel.ISupportInitialize)GreenValue).BeginInit();
             ((System.ComponentModel.ISupportInitialize)RedValue).BeginInit();
             ((System.ComponentModel.ISupportInitialize)AlphaValue).BeginInit();
-            groupBox2.SuspendLayout();
+            AlphaGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)AlphaTrack).BeginInit();
-            groupBox3.SuspendLayout();
+            WebGroup.SuspendLayout();
             SuspendLayout();
             // 
-            // groupBox1
+            // RgbGroup
             // 
-            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(BlueValue);
-            groupBox1.Controls.Add(GreenValue);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(RedValue);
-            groupBox1.Location = new Point(257, 3);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(94, 111);
-            groupBox1.TabIndex = 1;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "RGB";
+            RgbGroup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            RgbGroup.Controls.Add(label3);
+            RgbGroup.Controls.Add(label2);
+            RgbGroup.Controls.Add(BlueValue);
+            RgbGroup.Controls.Add(GreenValue);
+            RgbGroup.Controls.Add(label1);
+            RgbGroup.Controls.Add(RedValue);
+            RgbGroup.Location = new Point(257, 3);
+            RgbGroup.Name = "RgbGroup";
+            RgbGroup.Size = new Size(94, 111);
+            RgbGroup.TabIndex = 1;
+            RgbGroup.TabStop = false;
+            RgbGroup.Text = "RGB";
             // 
             // label3
             // 
@@ -130,10 +130,13 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
             // 
             NullCheckBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             NullCheckBox.AutoSize = true;
-            NullCheckBox.Location = new Point(336, 170);
+            NullCheckBox.CheckAlign = ContentAlignment.MiddleRight;
+            NullCheckBox.Location = new Point(277, 170);
             NullCheckBox.Name = "NullCheckBox";
-            NullCheckBox.Size = new Size(15, 14);
+            NullCheckBox.Size = new Size(74, 19);
             NullCheckBox.TabIndex = 2;
+            NullCheckBox.Text = "No Color";
+            NullCheckBox.TextAlign = ContentAlignment.MiddleRight;
             NullCheckBox.UseVisualStyleBackColor = true;
             NullCheckBox.CheckedChanged += NullCheckBox_CheckedChanged;
             // 
@@ -158,17 +161,17 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
             ColorCircle.Text = "colorCircle1";
             ColorCircle.OnColorChanged += ColorCircle_OnColorChanged;
             // 
-            // groupBox2
+            // AlphaGroup
             // 
-            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            groupBox2.Controls.Add(AlphaTrack);
-            groupBox2.Controls.Add(AlphaValue);
-            groupBox2.Location = new Point(194, 3);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(57, 184);
-            groupBox2.TabIndex = 5;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Alpha";
+            AlphaGroup.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            AlphaGroup.Controls.Add(AlphaTrack);
+            AlphaGroup.Controls.Add(AlphaValue);
+            AlphaGroup.Location = new Point(194, 3);
+            AlphaGroup.Name = "AlphaGroup";
+            AlphaGroup.Size = new Size(57, 184);
+            AlphaGroup.TabIndex = 5;
+            AlphaGroup.TabStop = false;
+            AlphaGroup.Text = "Alpha";
             // 
             // AlphaTrack
             // 
@@ -181,16 +184,16 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
             AlphaTrack.TabIndex = 6;
             AlphaTrack.ValueChanged += AlphaTrack_ValueChanged;
             // 
-            // groupBox3
+            // WebGroup
             // 
-            groupBox3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            groupBox3.Controls.Add(WebValue);
-            groupBox3.Location = new Point(257, 112);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(94, 52);
-            groupBox3.TabIndex = 7;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Web";
+            WebGroup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            WebGroup.Controls.Add(WebValue);
+            WebGroup.Location = new Point(257, 112);
+            WebGroup.Name = "WebGroup";
+            WebGroup.Size = new Size(94, 52);
+            WebGroup.TabIndex = 7;
+            WebGroup.TabStop = false;
+            WebGroup.Text = "Web";
             // 
             // WebValue
             // 
@@ -203,25 +206,25 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(groupBox3);
-            Controls.Add(groupBox2);
+            Controls.Add(WebGroup);
+            Controls.Add(AlphaGroup);
             Controls.Add(ColorCircle);
             Controls.Add(NullCheckBox);
-            Controls.Add(groupBox1);
+            Controls.Add(RgbGroup);
             MinimumSize = new Size(354, 190);
             Name = "AlphaColorPicker";
             Size = new Size(354, 190);
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            RgbGroup.ResumeLayout(false);
+            RgbGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)BlueValue).EndInit();
             ((System.ComponentModel.ISupportInitialize)GreenValue).EndInit();
             ((System.ComponentModel.ISupportInitialize)RedValue).EndInit();
             ((System.ComponentModel.ISupportInitialize)AlphaValue).EndInit();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            AlphaGroup.ResumeLayout(false);
+            AlphaGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)AlphaTrack).EndInit();
-            groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
+            WebGroup.ResumeLayout(false);
+            WebGroup.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -229,7 +232,7 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         #endregion
 
 
-        private GroupBox groupBox1;
+        private GroupBox RgbGroup;
         private CheckBox NullCheckBox;
         private Label label1;
         private NumericUpDown RedValue;
@@ -240,9 +243,9 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         private NumericUpDown AlphaValue;
         private ColorDialog colorDialog1;
         private ColorCircle ColorCircle;
-        private GroupBox groupBox2;
+        private GroupBox AlphaGroup;
         private TrackBar AlphaTrack;
-        private GroupBox groupBox3;
+        private GroupBox WebGroup;
         private TextBox WebValue;
     }
 }

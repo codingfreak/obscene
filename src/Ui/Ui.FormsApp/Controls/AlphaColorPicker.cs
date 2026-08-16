@@ -37,7 +37,8 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         {
             InitializeComponent();
             SelectedColor = initialValue ?? Color.FromArgb(255, Color.Black);
-            NullCheckBox.Checked = initialValue is null;
+            NullCheckBox.Visible = nullable;
+            NullCheckBox.Checked = nullable &&  initialValue is null;
             SetEnabled(!(nullable && initialValue is null));
         }
 
@@ -65,7 +66,7 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
 
         private void NullCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            SetEnabled(NullCheckBox.Checked);
+            SetEnabled(!NullCheckBox.Checked);
         }
 
         private void NumControl_ValueChanged(object sender, EventArgs e)
@@ -86,14 +87,10 @@ namespace codingfreaks.obscene.Ui.FormsApp.Controls
         /// <param name="on"></param>
         private void SetEnabled(bool on)
         {
-            //foreach (Control control in _tableLayout.Controls)
-            //{
-            //    if (control is CheckBox)
-            //    {
-            //        continue;
-            //    }
-            //    control.Visible = on;
-            //}
+            ColorCircle.Visible = on;
+            AlphaGroup.Visible = on;
+            RgbGroup.Visible = on;
+            WebGroup.Visible = on;
         }
 
         #endregion
