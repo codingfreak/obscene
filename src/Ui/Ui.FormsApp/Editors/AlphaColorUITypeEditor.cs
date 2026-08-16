@@ -26,6 +26,7 @@ namespace codingfreaks.obscene.Ui.FormsApp.Editors
             }
         }
 
+        /// <inheritdoc />
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext? context)
         {
             return UITypeEditorEditStyle.Modal;
@@ -45,33 +46,33 @@ namespace codingfreaks.obscene.Ui.FormsApp.Editors
                 // null (Color?) => no swatch
                 return;
             }
-            var g = e.Graphics;
-            var b = e.Bounds;
+            var graphics = e.Graphics;
+            var bounds = e.Bounds;
             // opaque checkerboard so alpha is actually visible
             const int Cell = 4;
-            using (var light = new SolidBrush(Color.White))
+            using (var lightBrush = new SolidBrush(Color.White))
             {
-                using (var dark = new SolidBrush(Color.LightGray))
+                using (var darkBrush = new SolidBrush(Color.LightGray))
                 {
-                    g.FillRectangle(light, b);
-                    for (var y = 0; y < b.Height; y += Cell)
+                    graphics.FillRectangle(lightBrush, bounds);
+                    for (var y = 0; y < bounds.Height; y += Cell)
                     {
-                        for (var x = 0; x < b.Width; x += Cell)
+                        for (var x = 0; x < bounds.Width; x += Cell)
                         {
                             if ((x / Cell + y / Cell) % 2 == 0)
                             {
-                                g.FillRectangle(
-                                    dark,
-                                    b.X + x,
-                                    b.Y + y,
-                                    Math.Min(Cell, b.Width - x),
-                                    Math.Min(Cell, b.Height - y));
+                                graphics.FillRectangle(
+                                    darkBrush,
+                                    bounds.X + x,
+                                    bounds.Y + y,
+                                    Math.Min(Cell, bounds.Width - x),
+                                    Math.Min(Cell, bounds.Height - y));
                             }
                         }
                     }
                     using (var fill = new SolidBrush(color))
                     {
-                        g.FillRectangle(fill, b);
+                        graphics.FillRectangle(fill, bounds);
                     }
                 }
             }
